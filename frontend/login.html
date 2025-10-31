@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Pelucan</title>
+</head>
+<body>
+  <h2>Iniciar sesión</h2>
+  <form id="loginForm">
+    <input type="email" id="correo" placeholder="Correo" required><br>
+    <input type="password" id="password" placeholder="Contraseña" required><br>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const correo = document.getElementById('correo').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correo, password })
+      });
+
+      if (!res.ok) {
+        alert('Credenciales incorrectas');
+        return;
+      }
+
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('rol', data.rol);
+
+      if (data.rol === 'ADMIN') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'cliente.html';
+      }
+    });
+  </script>
+</body>
+</html>

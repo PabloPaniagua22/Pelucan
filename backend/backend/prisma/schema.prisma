@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id             Int       @id @default(autoincrement())
+  nombre         String
+  apellido       String
+  correo         String    @unique
+  telefono       String?
+  contraseña     String
+  rol            Rol       @default(cliente)
+  fecha_registro DateTime  @default(now())
+  turnos         Turno[]
+}
+
+model Servicio {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  duracion    Int
+  precio      Float
+  turnos      Turno[]
+}
+
+model Turno {
+  id          Int       @id @default(autoincrement())
+  fecha       DateTime
+  hora        String
+  estado      EstadoTurno @default(Pendiente)
+  usuario_id  Int
+  servicio_id Int
+  creado_en   DateTime @default(now())
+  pago        Pago?
+  usuario     Usuario  @relation(fields: [usuario_id], references: [id])
+  servicio    Servicio @relation(fields: [servicio_id], references: [id])
+}
+
+model Pago {
+  id         Int      @id @default(autoincrement())
+  monto      Float
+  metodo     MetodoPago
+  fecha_pago DateTime @default(now())
+  turno_id   Int      @unique
+  turno      Turno    @relation(fields: [turno_id], references: [id])
+}
+
+enum Rol {
+  admin
+  cliente
+}
+
+enum EstadoTurno {
+  Pendiente
+  Confirmado
+  Cancelado
+  Completado
+}
+
+enum MetodoPago {
+  efectivo
+  tarjeta
+  transferencia
+}

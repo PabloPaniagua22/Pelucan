@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Turnos - Pelucan</title>
+<style>
+  body { font-family: Arial; padding: 20px; }
+  input, button, select { margin: 5px; padding: 8px; }
+  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  #formTurno { display: none; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h2>Gestión de Turnos</h2>
+
+<!-- Botones de acción -->
+<button onclick="mostrarFormulario()">Agregar Turno</button>
+<button onclick="window.history.back()">⬅️ Volver</button>
+
+<!-- Formulario oculto -->
+<form id="formTurno">
+  <input type="hidden" id="id">
+  <input type="text" id="dia" placeholder="Día (dd/mm/aaaa)" required>
+  <input type="text" id="hora" placeholder="Hora (hh:mm)" required>
+  <select id="estado">
+    <option value="Pendiente">Pendiente</option>
+    <option value="Confirmado">Confirmado</option>
+    <option value="Cancelado">Cancelado</option>
+    <option value="Completado">Completado</option>
+  </select>
+  <input type="number" id="usuario_id" placeholder="ID Usuario" required>
+  <input type="number" id="servicio_id" placeholder="ID Servicio" required>
+  <button type="submit">Guardar</button>
+  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
+</form>
+
+<!-- Tabla de turnos -->
+<table id="tablaTurnos">
+  <thead><tr><th>ID</th><th>Fecha</th><th>Hora</th><th>Usuario</th><th>Servicio</th><th>Estado</th><th>Acciones</th></tr></thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const API = "http://localhost:3000/turnos";
+const form = document.getElementById("formTurno");
+const tbody = document.querySelector("#tablaTurnos tbody");
+
+// Mostrar/Ocultar formulario
+function mostrarFormulario() { form.style.display = "block"; }
+function ocultarFormulario() { 
+  form.style.display = "none"; 
+  form.reset();
+}
+
+// Cargar turnos en la tabla
+async function cargarTurnos() {
+  const res = await fetch(API);
+  const data = await res.json();
+  tbody.innerHTML = "";
+  data.forEach(t => {
+    const fechaObj = new Date(t.fecha);
+    const dia = String(fechaObj.getDate()).padStart(2, "0");
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+    const anio = fechaObj.getFullYear();
+    const fechaFormateada = `${dia}/${mes}/${anio}`;
+    tbody.innerHTML += `
+      <tr>
+        <td>${t.id}</td>
+        <td>${fechaFormateada}</td>
+        <td>${t.hora}</td>
+        <td>${t.usuario?.nombre || 'N/A'}</td>
+        <td>${t.servicio?.nombre || 'N/A'}</td>
+        <td>${t.estado}</td>
+        <td>
+          <button onclick="editar(${t.id}, '${t.fecha}', '${t.hora}', '${t.estado}', ${t.usuario_id}, ${t.servicio_id})">✏️</button>
+          <button onclick="eliminar(${t.id})">🗑️</button>
+        </td>
+      </tr>`;
+  });
+}
+
+// Editar turno
+function editar(id, fecha, hora, estado, usuario_id, servicio_id) {
+  mostrarFormulario();
+  const fechaObj = new Date(fecha);
+  const dia = String(fechaObj.getDate()).padStart(2, "0");
+  const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+  const anio = fechaObj.getFullYear();
+  document.getElementById("id").value = id;
+  document.getElementById("dia").value = `${dia}/${mes}/${anio}`;
+  document.getElementById("hora").value = hora;
+  document.getElementById("estado").value = estado.toLowerCase();
+  document.getElementById("usuario_id").value = usuario_id;
+  document.getElementById("servicio_id").value = servicio_id;
+}
+
+// Eliminar turno
+async function eliminar(id) {
+  if (confirm("¿Eliminar turno?")) {
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+    cargarTurnos();
+  }
+}
+
+// Guardar turno
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("id").value;
+  const [d, m, a] = document.getElementById("dia").value.split("/");
+  const horaValor = document.getElementById("hora").value;
+  const fechaISO = new Date(`${a}-${m}-${d}T${horaValor}:00`).toISOString();
+
+  const datos = {
+    fecha: fechaISO,
+    hora: horaValor,
+    estado: document.getElementById("estado").value,
+    usuario_id: Number(document.getElementById("usuario_id").value),
+    servicio_id: Number(document.getElementById("servicio_id").value)
+  };
+
+  try {
+    let res;
+    if (id) {
+      res = await fetch(`${API}/${id}`, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
+    } else {
+      res = await fetch(API, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
+    }
+    if (!res.ok) {
+      const error = await res.json();
+      alert(error.message || "Error al guardar el turno.");
+      return;
+    }
+    ocultarFormulario();
+    cargarTurnos();
+  } catch (err) {
+    alert("Error de conexión con el servidor.");
+  }
+});
+// Inicial
+cargarTurnos();
+</script>
+</body>
+</html>

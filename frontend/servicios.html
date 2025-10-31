@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Servicios - Pelucan</title>
+<style>
+  body { font-family: Arial; padding: 20px; }
+  input, button { margin: 5px; padding: 8px; }
+  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  #formServicio { display: none; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h2>Gestión de Servicios</h2>
+
+<button onclick="mostrarFormulario()">Agregar Servicio</button>
+<button onclick="window.history.back()">⬅️ Volver</button>
+
+<form id="formServicio">
+  <input type="hidden" id="id">
+  <input type="text" id="nombre" placeholder="Nombre del Servicio" required>
+  <input type="number" id="precio" placeholder="Precio" required>
+  <input type="number" id="duracion" placeholder="Duración (minutos)" required>
+  <button type="submit">Guardar</button>
+  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
+</form>
+
+<table id="tablaServicios">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Duración</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const API = "http://localhost:3000/servicios";
+const form = document.getElementById("formServicio");
+const tbody = document.querySelector("#tablaServicios tbody");
+
+function mostrarFormulario() { form.style.display = "block"; }
+function ocultarFormulario() { form.style.display = "none"; form.reset(); }
+
+async function cargarServicios() {
+  const res = await fetch(API);
+  const data = await res.json();
+  tbody.innerHTML = "";
+  data.forEach(s => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${s.id}</td>
+        <td>${s.nombre}</td>
+        <td>${s.precio}</td>
+        <td>${s.duracion}</td>
+        <td>
+          <button onclick="editar(${s.id}, '${s.nombre}', ${s.precio}, ${s.duracion})">✏️</button>
+          <button onclick="eliminar(${s.id})">🗑️</button>
+        </td>
+      </tr>`;
+  });
+}
+
+function editar(id, nombre, precio, duracion) {
+  mostrarFormulario();
+  document.getElementById("id").value = id;
+  document.getElementById("nombre").value = nombre;
+  document.getElementById("precio").value = precio;
+  document.getElementById("duracion").value = duracion;
+}
+
+async function eliminar(id) {
+  if (confirm("¿Eliminar servicio?")) {
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+    cargarServicios();
+  }
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("id").value;
+  const datos = {
+    nombre: document.getElementById("nombre").value,
+    precio: Number(document.getElementById("precio").value),
+    duracion: Number(document.getElementById("duracion").value)
+  };
+  if (id) {
+    await fetch(`${API}/${id}`, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
+  } else {
+    await fetch(API, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
+  }
+  ocultarFormulario();
+  cargarServicios();
+});
+
+cargarServicios();
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Usuarios - Pelucan</title>
+<style>
+  body { font-family: Arial; padding: 20px; }
+  input, button { margin: 5px; padding: 8px; }
+  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  #formUsuario { display: none; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h2>Gestión de Usuarios</h2>
+
+<button onclick="mostrarFormulario()">Agregar Usuario</button>
+
+<form id="formUsuario">
+  <input type="hidden" id="id">
+  <input type="text" id="nombre" placeholder="Nombre" required>
+  <input type="text" id="apellido" placeholder="Apellido" required>
+  <input type="email" id="correo" placeholder="Correo electrónico" required>
+  <input type="text" id="telefono" placeholder="Teléfono">
+  <input type="password" id="contraseña" placeholder="Contraseña" required>
+  <button type="submit">Guardar</button>
+  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
+</form>
+
+<table id="tablaUsuarios">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Correo</th>
+      <th>Teléfono</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<button onclick="window.history.back()">Volver</button>
+
+<script>
+const API = "http://localhost:3000/usuarios";
+const form = document.getElementById("formUsuario");
+const tbody = document.querySelector("#tablaUsuarios tbody");
+
+function mostrarFormulario() { form.style.display = "block"; }
+function ocultarFormulario() { form.style.display = "none"; form.reset(); }
+
+async function cargarUsuarios() {
+  const res = await fetch(API);
+  const data = await res.json();
+  tbody.innerHTML = "";
+  data.forEach(u => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${u.id}</td>
+        <td>${u.nombre}</td>
+        <td>${u.apellido || ''}</td>
+        <td>${u.correo}</td>
+        <td>${u.telefono || ''}</td>
+        <td>
+          <button onclick="editar(${u.id}, '${u.nombre}', '${u.apellido}', '${u.correo}', '${u.telefono || ''}', '${u.contraseña || ''}')">✏️</button>
+          <button onclick="eliminar(${u.id})">🗑️</button>
+        </td>
+      </tr>`;
+  });
+}
+
+function editar(id, nombre, apellido, correo, telefono, contraseña) {
+  mostrarFormulario();
+  document.getElementById("id").value = id;
+  document.getElementById("nombre").value = nombre;
+  document.getElementById("apellido").value = apellido;
+  document.getElementById("correo").value = correo;
+  document.getElementById("telefono").value = telefono;
+  document.getElementById("contraseña").value = contraseña;
+}
+
+async function eliminar(id) {
+  if (confirm("¿Eliminar usuario?")) {
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+    cargarUsuarios();
+  }
+}
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("id").value;
+  const datos = {
+    nombre: document.getElementById("nombre").value,
+    apellido: document.getElementById("apellido").value,
+    correo: document.getElementById("correo").value,
+    telefono: document.getElementById("telefono").value,
+    contraseña: document.getElementById("contraseña").value
+  };
+  if (id) {
+    await fetch(`${API}/${id}`, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
+  } else {
+    await fetch(API, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
+  }
+  ocultarFormulario();
+  cargarUsuarios();
+});
+
+cargarUsuarios();
+</script>
+</body>
+</html>
