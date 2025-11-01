@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Admin</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 100px; }
+    input, button { margin: 8px; padding: 8px; width: 200px; }
+  </style>
+</head>
+<body>
+  <h1>Ingreso Administrador</h1>
+  <input id="username" type="text" placeholder="Usuario">
+  <input id="password" type="password" placeholder="Contraseña">
+  <br>
+  <button onclick="login()">Ingresar</button>
+
+  <p id="mensaje"></p>
+
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = '/admin/dashboard.html';
+      } else {
+        document.getElementById('mensaje').innerText = data.message;
+      }
+    }
+  </script>
+</body>
+</html>

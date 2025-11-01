@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Admin</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 100px; }
+    button { margin: 10px; padding: 10px 15px; }
+  </style>
+</head>
+<body>
+  <h1>Panel de Administración</h1>
+  <button onclick="window.location.href='usuarios.html'">Usuarios</button>
+  <button onclick="window.location.href='turnos.html'">Turnos</button>
+  <button onclick="window.location.href='servicios.html'">Servicios</button>
+  <button onclick="logout()">Cerrar Sesión</button>
+
+  <script>
+  async function logout() {
+    await fetch('http://localhost:3000/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+    window.location.href = '/admin/login.html';
+  }
+  </script>
+</body>
+</html>
