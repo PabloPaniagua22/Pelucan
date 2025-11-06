@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Mascotas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
+    h1 { color: #333; }
+    form { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
+    input, button { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; }
+    button { cursor: pointer; }
+    .btn-back { margin-bottom: 15px; background: #d9534f; color: white; }
+    .btn-toggle { background: #0275d8; color: white; }
+    #duenoList { border: 1px solid #ccc; max-height: 100px; overflow-y: auto; display: none; background: white; position: absolute; z-index: 10; }
+    #duenoList div { padding: 5px; cursor: pointer; }
+    #duenoList div:hover { background: #f0f0f0; }
+    .dueno-container { position: relative; }
+  </style>
+</head>
+<body>
+  <button class="btn-back" onclick="window.location.href='dashboard.html'">⬅ Volver atrás</button>
+  <h1>Gestión de Mascotas</h1>
+  <button class="btn-toggle" onclick="toggleForm()">➕ Agregar Mascota</button>
+
+  <form id="mascotaForm">
+    <input type="hidden" id="mascotaId" />
+    <input type="text" id="nombre" placeholder="Nombre" required />
+    <input type="text" id="especie" placeholder="Especie" required />
+    <input type="number" id="edad" placeholder="Edad" required />
+
+    <!-- Buscador de dueño -->
+    <div class="dueno-container">
+      <input type="text" id="duenoNombre" placeholder="Nombre del dueño" autocomplete="off" required />
+      <input type="hidden" id="dueno_id" />
+      <div id="duenoList" style="border:1px solid #ccc; display:none; max-height:150px; overflow-y:auto; position:absolute; background:white; z-index:10;"></div>
+    </div>
+
+    <button type="submit">Guardar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Especie</th>
+        <th>Edad</th>
+        <th>Dueño</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaMascotas"></tbody>
+  </table>
+
+<script>
+const form = document.getElementById('mascotaForm');
+const tabla = document.getElementById('tablaMascotas');
+const duenoNombre = document.getElementById('duenoNombre');
+const duenoList = document.getElementById('duenoList');
+const dueno_id = document.getElementById('dueno_id');
+
+function toggleForm() {
+  form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function cargarMascotas() {
+  const res = await fetch('http://localhost:3000/mascotas');
+  const data = await res.json();
+  tabla.innerHTML = data.map(m => `
+    <tr>
+      <td>${m.id}</td>
+      <td>${m.nombre}</td>
+      <td>${m.especie}</td>
+      <td>${m.edad}</td>
+      <td>${m.dueno?.nombre ?? 'Sin dueño'}</td>
+      <td>
+        <button onclick="editar(${m.id}, '${m.nombre}', '${m.especie}', ${m.edad}, ${m.dueno_id}, '${m.dueno?.nombre ?? ''}')">Editar</button>
+        <button onclick="eliminar(${m.id})">Eliminar</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+// Buscador de dueños con autocomplete
+let timeout;
+duenoNombre.addEventListener('input', () => {
+  clearTimeout(timeout);
+  const query = duenoNombre.value.trim();
+  if (!query) { 
+    duenoList.style.display = 'none'; 
+    return; 
+  }
+
+  timeout = setTimeout(async () => {
+    const res = await fetch(`http://localhost:3000/usuarios/search?nombre=${encodeURIComponent(query)}`);
+    const usuarios = await res.json();
+    duenoList.innerHTML = usuarios.map(u => `<div data-id="${u.id}">${u.nombre} ${u.apellido}</div>`).join('');
+    duenoList.style.display = usuarios.length ? 'block' : 'none';
+  }, 300);
+});
+
+// Selección de dueño del listado
+duenoList.addEventListener('click', (e) => {
+  if (e.target.dataset.id) {
+    duenoNombre.value = e.target.textContent;
+    dueno_id.value = e.target.dataset.id;
+    duenoList.style.display = 'none';
+  }
+});
+
+// Envío de formulario
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = document.getElementById('mascotaId').value;
+  const data = {
+    nombre: document.getElementById('nombre').value,
+    especie: document.getElementById('especie').value,
+    edad: Number(document.getElementById('edad').value),
+    dueno_id: Number(dueno_id.value),
+  };
+  const method = id ? 'PUT' : 'POST';
+  const url = id ? `http://localhost:3000/mascotas/${id}` : 'http://localhost:3000/mascotas';
+
+  await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+
+  form.reset();
+  form.style.display = 'none';
+  cargarMascotas();
+});
+
+// Función para editar mascota
+function editar(id, nombre, especie, edad, idDueno, nombreDueno) {
+  document.getElementById('mascotaId').value = id;
+  document.getElementById('nombre').value = nombre;
+  document.getElementById('especie').value = especie;
+  document.getElementById('edad').value = edad;
+  duenoNombre.value = nombreDueno;
+  dueno_id.value = idDueno;
+  form.style.display = 'flex';
+}
+
+// Función para eliminar mascota
+async function eliminar(id) {
+  await fetch(`http://localhost:3000/mascotas/${id}`, { method: 'DELETE' });
+  cargarMascotas();
+}
+
+cargarMascotas();
+
+</script>
+</body>
+</html>

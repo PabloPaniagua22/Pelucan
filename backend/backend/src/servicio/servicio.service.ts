@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 export class ServicioService {
   constructor(private prisma: PrismaService) {}
 
-  async crearServicio(data: Prisma.ServicioCreateInput) {
+  async crearServicio(data: Prisma.servicioCreateInput) {
     return this.prisma.servicio.create({ data });
   }
 
@@ -18,7 +18,7 @@ export class ServicioService {
     return this.prisma.servicio.findUnique({ where: { id } });
   }
 
-  async actualizarServicio(id: number, data: Prisma.ServicioUpdateInput) {
+  async actualizarServicio(id: number, data: Prisma.servicioUpdateInput) {
     return this.prisma.servicio.update({
       where: { id },
       data,

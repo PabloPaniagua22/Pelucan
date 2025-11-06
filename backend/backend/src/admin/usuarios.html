@@ -23,7 +23,7 @@
   <input type="text" id="apellido" placeholder="Apellido" required>
   <input type="email" id="correo" placeholder="Correo electrónico" required>
   <input type="text" id="telefono" placeholder="Teléfono">
-  <input type="password" id="contraseña" placeholder="Contraseña" required>
+  <input type="password" id="contrasena" placeholder="Contraseña" required>
   <button type="submit">Guardar</button>
   <button type="button" onclick="ocultarFormulario()">Cancelar</button>
 </form>
@@ -65,21 +65,21 @@ async function cargarUsuarios() {
         <td>${u.correo}</td>
         <td>${u.telefono || ''}</td>
         <td>
-          <button onclick="editar(${u.id}, '${u.nombre}', '${u.apellido}', '${u.correo}', '${u.telefono || ''}', '${u.contraseña || ''}')">✏️</button>
+          <button onclick="editar(${u.id}, '${u.nombre}', '${u.apellido}', '${u.correo}', '${u.telefono || ''}', '${u.contrasena || ''}')">✏️</button>
           <button onclick="eliminar(${u.id})">🗑️</button>
         </td>
       </tr>`;
   });
 }
 
-function editar(id, nombre, apellido, correo, telefono, contraseña) {
+function editar(id, nombre, apellido, correo, telefono, contrasena) {
   mostrarFormulario();
   document.getElementById("id").value = id;
   document.getElementById("nombre").value = nombre;
   document.getElementById("apellido").value = apellido;
   document.getElementById("correo").value = correo;
   document.getElementById("telefono").value = telefono;
-  document.getElementById("contraseña").value = contraseña;
+  document.getElementById("contrasena").value = contrasena;
 }
 
 async function eliminar(id) {
@@ -97,17 +97,40 @@ form.addEventListener("submit", async (e) => {
     apellido: document.getElementById("apellido").value,
     correo: document.getElementById("correo").value,
     telefono: document.getElementById("telefono").value,
-    contraseña: document.getElementById("contraseña").value
+    contrasena: document.getElementById("contrasena").value
   };
-  if (id) {
-    await fetch(`${API}/${id}`, { method: "PUT", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
-  } else {
-    await fetch(API, { method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(datos) });
-  }
-  ocultarFormulario();
-  cargarUsuarios();
-});
 
+  try { // <-- Agregamos try aquí
+    let res;
+    if (id) {
+      res = await fetch(`${API}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+      });
+    } else {
+      res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+      });
+    }
+
+    const resultado = await res.json(); // <-- capturamos la respuesta
+    if (!res.ok) { // <-- si el backend devuelve error
+      alert(resultado.message); // <-- mostramos el error en pantalla
+      return; // no continuamos con reload de tabla
+    }
+
+    // Si todo bien, ocultamos el formulario y recargamos
+    ocultarFormulario();
+    cargarUsuarios();
+
+  } catch (err) { // <-- captura de errores de conexión u otros
+    console.error(err);
+    alert("Error de conexión con el servidor.");
+  }
+});
 cargarUsuarios();
 </script>
 </body>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Servicios - Pelucan</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          /* Use same primary/background colors as index.html for consistent aesthetic */
+          colors: {
+            "primary": "#19e619",
+            "secondary": "#f6f8f6",
+            "background-light": "#f6f8f6",
+            "background-dark": "#112111",
+            "text-light": "#64748b",
+            "text-dark": "#94a3b8",
+            "heading-light": "#0f172a",
+            "heading-dark": "#f8fafc",
+          },
+          fontFamily: {
+            "display": ["Be Vietnam Pro", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-4 sm:px-10 py-3">
+<div class="flex items-center gap-4 text-heading-light dark:text-heading-dark">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H42V17.3333V30.6667H24V44H6V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em]">Pelucan</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="index.html">Inicio</a>
+<a class="text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="nosotros.html">Nosotros</a>
+<a class="text-primary dark:text-primary text-sm font-bold leading-normal" href="servicios.html">Servicios</a>
+<a class="text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal" href="reservar-turno.html">Reservar</a>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-secondary/90 transition-colors">
+<span class="truncate">Mi Cuenta</span>
+</button>
+</div>
+<button class="md:hidden p-2 rounded-md text-text-light dark:text-text-dark hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<main class="flex-grow">
+<div class="@container mt-5">
+<div class="@[480px]:px-4 @[480px]:py-3">
+<div class="bg-cover bg-center flex flex-col justify-end overflow-hidden bg-white @[480px]:rounded-xl min-h-[320px] md:min-h-80" data-alt="Un perro golden retriever feliz y limpio mirando a la cámara" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 40%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCjCRW-aQcTZ5LCQ0Kpg187fae23iJ72jemkY-qa_58oJ1PSgxHZTxiMokHS2PbonFNhlOW8X1UviDH12sGbfmGSBof2lzCX5T4q2JKHEBedVkGNXT2cqV55D5v2MCtJ9iUoxjaDBM_3p0YUbcvNWX3Ai9JNAuOUjRfEcxPpqZ22izLZ1SX1hoJzAr_bAAkMdvZmyZqsLOO-WjIoa5AvxXYuY_rt6vYs-gtGhrcV6cKquLHS32dnBkOdL1wAXOhhvQpqJtF_zREcLEt");'>
+<div class="flex p-6 md:p-8">
+<h1 class="text-white tracking-tight text-3xl md:text-4xl font-black leading-tight">Los mejores cuidados para tu mejor amigo</h1>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap justify-between gap-4 p-4 mt-8">
+<div class="flex min-w-72 flex-col gap-3">
+<p class="text-heading-light dark:text-heading-dark text-4xl font-black leading-tight tracking-[-0.033em]">Nuestros Servicios</p>
+<p class="text-text-light dark:text-text-dark text-base font-normal leading-normal max-w-2xl">
+                  Descubre todo lo que podemos hacer por tu mascota. En Pelucan, nos dedicamos a ofrecer servicios de la más alta calidad, asegurando el bienestar y la felicidad de tu fiel compañero. Nuestra filosofía se basa en el amor y el respeto por los animales, utilizando productos de primera y técnicas adaptadas a cada necesidad.
+                </p>
+</div>
+</div>
+<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6 p-4">
+<div class="flex flex-col gap-4 p-6 bg-white dark:bg-background-dark rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">content_cut</span>
+<p class="text-heading-light dark:text-heading-dark text-xl font-bold leading-normal">Corte y Estilo</p>
+</div>
+<p class="text-text-light dark:text-text-dark text-sm font-normal leading-normal">Desde cortes de raza hasta estilos personalizados, dejamos a tu perro luciendo increíble y cómodo.</p>
+<p class="text-primary text-lg font-bold">Desde $25</p>
+<button class="mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 transition-colors">
+<span class="truncate">Ver más</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 p-6 bg-white dark:bg-background-dark rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">shower</span>
+<p class="text-heading-light dark:text-heading-dark text-xl font-bold leading-normal">Baño y Secado</p>
+</div>
+<p class="text-text-light dark:text-text-dark text-sm font-normal leading-normal">Utilizamos shampoos y acondicionadores de alta calidad, adecuados para cada tipo de piel y pelaje.</p>
+<p class="text-primary text-lg font-bold">Desde $15</p>
+<button class="mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 transition-colors">
+<span class="truncate">Ver más</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 p-6 bg-white dark:bg-background-dark rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">spa</span>
+<p class="text-heading-light dark:text-heading-dark text-xl font-bold leading-normal">Tratamientos de Pelaje</p>
+</div>
+<p class="text-text-light dark:text-text-dark text-sm font-normal leading-normal">Tratamientos de hidratación, nutrición y brillo para un pelaje sano y radiante.</p>
+<p class="text-primary text-lg font-bold">Desde $30</p>
+<button class="mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 transition-colors">
+<span class="truncate">Ver más</span>
+</button>
+</div>
+<div class="flex flex-col gap-4 p-6 bg-white dark:bg-background-dark rounded-xl shadow-sm hover:shadow-lg transition-shadow">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">pest_control</span>
+<p class="text-heading-light dark:text-heading-dark text-xl font-bold leading-normal">Control de Parásitos</p>
+</div>
+<p class="text-text-light dark:text-text-dark text-sm font-normal leading-normal">Protegemos a tu mascota de pulgas, garrapatas y otros parásitos con productos seguros y efectivos.</p>
+<p class="text-primary text-lg font-bold">Desde $20</p>
+<button class="mt-2 flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary/10 text-primary text-sm font-bold leading-normal tracking-[0.015em] hover:bg-primary/20 transition-colors">
+<span class="truncate">Ver más</span>
+</button>
+</div>
+</div>
+<div class="bg-white dark:bg-background-dark rounded-xl p-8 my-10 text-center">
+<h2 class="text-heading-light dark:text-heading-dark text-2xl md:text-3xl font-black leading-tight tracking-[-0.033em]">¿Listo para mimar a tu mascota?</h2>
+<p class="text-text-light dark:text-text-dark text-base font-normal leading-normal mt-3 mb-6 max-w-xl mx-auto">
+                    Tu compañero peludo merece lo mejor. Dale el cuidado que se merece con nuestros servicios profesionales.
+                 </p>
+<div class="flex px-4 py-3 justify-center">
+<a href="reservar-turno.html" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-6 bg-secondary text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-secondary/90 transition-transform duration-300 transform hover:scale-105">
+    <span class="truncate">¡Reserva tu cita ahora!</span>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-4 text-center my-10">
+<div class="flex flex-col items-center gap-2">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/10 text-primary mb-2">
+<span class="material-symbols-outlined">health_and_safety</span>
+</div>
+<h3 class="text-heading-light dark:text-heading-dark text-lg font-bold">Productos de Alta Calidad</h3>
+<p class="text-text-light dark:text-text-dark text-sm">Solo usamos productos premium que son seguros y efectivos.</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/10 text-primary mb-2">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<h3 class="text-heading-light dark:text-heading-dark text-lg font-bold">Personal Experto</h3>
+<p class="text-text-light dark:text-text-dark text-sm">Nuestro equipo ama a los animales y está altamente capacitado.</p>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="flex items-center justify-center size-12 rounded-full bg-primary/10 text-primary mb-2">
+<span class="material-symbols-outlined">sentiment_very_satisfied</span>
+</div>
+<h3 class="text-heading-light dark:text-heading-dark text-lg font-bold">Ambiente Relajado</h3>
+<p class="text-text-light dark:text-text-dark text-sm">Un espacio seguro y tranquilo para que tu mascota se sienta a gusto.</p>
+</div>
+</div>
+</main>
+<footer class="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 pb-4 px-4">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-center md:text-left">
+<p class="text-heading-light dark:text-heading-dark font-bold text-lg">Pelucan</p>
+<p class="text-text-light dark:text-text-dark text-sm mt-1">El mejor cuidado para tu mejor amigo.</p>
+</div>
+<div class="flex gap-4">
+<a class="text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary" href="#"><svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" fill-rule="evenodd"></path></svg></a>
+<a class="text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary" href="#"><svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.71v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg></a>
+<a class="text-text-light dark:text-text-dark hover:text-primary dark:hover:text-primary" href="#"><svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path clip-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.024.06 1.378.06 3.808s-.012 2.784-.06 3.808c-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.024.048-1.378.06-3.808.06s-2.784-.013-3.808-.06c-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.048-1.024-.06-1.378-.06-3.808s.012-2.784.06-3.808c.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.345 2.525c.636-.247 1.363-.416 2.427-.465C9.793 2.013 10.148 2 12.315 2h.001zm-1.04 4.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zm2.034-2.034a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zm-2.034 2.034a1.75 1.75 0 10-3.5 0 1.75 1.75 0 003.5 0z" fill-rule="evenodd"></path></svg></a>
+</div>
+</div>
+<div class="mt-6 text-center text-sm text-text-light dark:text-text-dark border-t border-gray-200 dark:border-gray-700 pt-4">
+<p>© 2024 Pelucan. Todos los derechos reservados.</p>
+<a class="hover:underline" href="#">Términos y Condiciones</a>
+</div>
+</footer>
+</div>
+</div>
+</div>
+</div>
+</body></html>

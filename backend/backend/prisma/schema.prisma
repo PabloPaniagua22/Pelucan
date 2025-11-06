@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,63 +7,91 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id             Int       @id @default(autoincrement())
-  nombre         String
-  apellido       String
-  correo         String    @unique
-  telefono       String?
-  contraseña     String
-  rol            Rol       @default(cliente)
-  fecha_registro DateTime  @default(now())
-  turnos         Turno[]
+model mascota {
+  id       Int     @id @default(autoincrement())
+  nombre   String  @db.VarChar(255)
+  especie  String  @db.VarChar(100)
+  raza     String? @db.VarChar(100)
+  edad     Int?
+  dueno_id Int
+  usuario  usuario @relation(fields: [dueno_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "mascota_ibfk_1")
+
+  @@index([dueno_id], map: "dueno_id_idx")
 }
 
-model Servicio {
-  id          Int      @id @default(autoincrement())
-  nombre      String
-  descripcion String?
+model pago {
+  id         Int         @id @default(autoincrement())
+  monto      Float       @db.Float
+  metodo     pago_metodo
+  fecha_pago DateTime?   @default(now()) @db.DateTime(0)
+  turno_id   Int?        @unique(map: "turno_id")
+  turno      turno?      @relation(fields: [turno_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "pago_ibfk_1")
+}
+
+model personal {
+  id            Int                   @id @default(autoincrement())
+  nombre        String                @db.VarChar(255)
+  apellido      String                @db.VarChar(255)
+  especialidad  personal_especialidad
+  telefono      String?               @db.VarChar(50)
+  fecha_ingreso DateTime?             @default(now()) @db.DateTime(0)
+  turno         turno[]
+}
+
+model servicio {
+  id          Int     @id @default(autoincrement())
+  nombre      String  @db.VarChar(255)
+  descripcion String? @db.Text
   duracion    Int
-  precio      Float
-  turnos      Turno[]
+  precio      Float   @db.Float
+  turno       turno[]
 }
 
-model Turno {
-  id          Int       @id @default(autoincrement())
-  fecha       DateTime
-  hora        String
-  estado      EstadoTurno @default(Pendiente)
+model turno {
+  id          Int           @id @default(autoincrement())
+  fecha       DateTime      @db.DateTime(0)
+  hora        String        @db.VarChar(10)
+  estado      turno_estado? @default(Pendiente)
   usuario_id  Int
   servicio_id Int
-  creado_en   DateTime @default(now())
-  pago        Pago?
-  usuario     Usuario  @relation(fields: [usuario_id], references: [id])
-  servicio    Servicio @relation(fields: [servicio_id], references: [id])
+  personal_id Int?
+  creado_en   DateTime?     @default(now()) @db.DateTime(0)
+  pago        pago?
+  usuario     usuario       @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "turno_ibfk_1")
+  servicio    servicio      @relation(fields: [servicio_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "turno_ibfk_2")
+  personal    personal?     @relation(fields: [personal_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "turno_ibfk_3")
+
+  @@index([personal_id], map: "personal_id_idx")
+  @@index([servicio_id], map: "servicio_id_idx")
+  @@index([usuario_id], map: "usuario_id_idx")
 }
 
-model Pago {
-  id         Int      @id @default(autoincrement())
-  monto      Float
-  metodo     MetodoPago
-  fecha_pago DateTime @default(now())
-  turno_id   Int      @unique
-  turno      Turno    @relation(fields: [turno_id], references: [id])
+model usuario {
+  id             Int       @id @default(autoincrement())
+  nombre         String    @db.VarChar(255)
+  apellido       String    @db.VarChar(255)
+  correo         String    @unique(map: "correo") @db.VarChar(255)
+  telefono       String?   @db.VarChar(50)
+  contrasena     String    @map("contraseña") @db.VarChar(255)
+  fecha_registro DateTime? @default(now()) @db.DateTime(0)
+  mascota        mascota[]
+  turno          turno[]
 }
 
-enum Rol {
-  admin
-  cliente
+enum personal_especialidad {
+  peluquero
+  veterinario
 }
 
-enum EstadoTurno {
+enum turno_estado {
   Pendiente
   Confirmado
   Cancelado
   Completado
 }
 
-enum MetodoPago {
-  efectivo
-  tarjeta
-  transferencia
+enum pago_metodo {
+  Efectivo
+  Tarjeta
+  Transferencia
 }

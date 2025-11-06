@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Personal</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; }
+    h1 { color: #333; }
+    form { margin-top: 15px; display: none; flex-direction: column; gap: 8px; }
+    input, select, button { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    button { cursor: pointer; }
+    .btn-back { margin-bottom: 15px; background: #d9534f; color: white; }
+    .btn-toggle { background: #0275d8; color: white; }
+  </style>
+</head>
+<body>
+  <button class="btn-back" onclick="window.location.href='dashboard.html'">⬅ Volver atrás</button>
+  <h1>Gestión de Personal</h1>
+  <button class="btn-toggle" onclick="toggleForm()">➕ Agregar Personal</button>
+
+  <form id="personalForm">
+    <input type="hidden" id="personalId" />
+    <input type="text" id="nombre" placeholder="Nombre" required />
+    <input type="text" id="apellido" placeholder="Apellido" required />
+    <select id="personal_especialidad" required>
+      <option value="" disabled selected>Seleccione una especialidad</option>
+      <option value="peluquero">Peluquero</option>
+      <option value="veterinario">Veterinario</option>
+    </select>
+    <input type="text" id="telefono" placeholder="Teléfono" />
+    <button type="submit">Guardar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Especialidad</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="tablaPersonal"></tbody>
+  </table>
+
+  <script>
+    const form = document.getElementById('personalForm');
+    const tabla = document.getElementById('tablaPersonal');
+
+    function toggleForm() {
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    async function cargarPersonal() {
+      const res = await fetch('http://localhost:3000/personal');
+      const data = await res.json();
+      tabla.innerHTML = data.map(p => `
+        <tr>
+          <td>${p.id}</td>
+          <td>${p.nombre}</td>
+          <td>${p.apellido}</td>
+          <td>${p.especialidad}</td>
+          <td>${p.telefono ?? ''}</td>
+          <td>
+            <button onclick="editar(${p.id}, '${p.nombre}', '${p.apellido}', '${p.personal_especialidad}', '${p.telefono ?? ''}')">Editar</button>
+            <button onclick="eliminar(${p.id})">Eliminar</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('personalId').value;
+      const data = {
+        nombre: document.getElementById('nombre').value,
+        apellido: document.getElementById('apellido').value,
+        especialidad: document.getElementById('personal_especialidad').value,
+        telefono: document.getElementById('telefono').value
+      };
+      const method = id ? 'PUT' : 'POST';
+      const url = id ? `http://localhost:3000/personal/${id}` : 'http://localhost:3000/personal';
+      await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      form.reset();
+      form.style.display = 'none';
+      cargarPersonal();
+    });
+
+    function editar(id, nombre, apellido, especialidad, telefono) {
+      document.getElementById('personalId').value = id;
+      document.getElementById('nombre').value = nombre;
+      document.getElementById('apellido').value = apellido;
+      document.getElementById('personal_especialidad').value = especialidad;
+      document.getElementById('telefono').value = telefono;
+      form.style.display = 'flex';
+    }
+
+    async function eliminar(id) {
+      await fetch(`http://localhost:3000/personal/${id}`, { method: 'DELETE' });
+      cargarPersonal();
+    }
+
+    cargarPersonal();
+  </script>
+</body>
+</html>

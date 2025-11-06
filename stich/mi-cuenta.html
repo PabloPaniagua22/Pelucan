@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Be+Vietnam+Pro:wght@400;500;700;900&amp;family=Noto+Sans:wght@400;500;700;900" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#19e619",
+            "background-light": "#f6f8f6",
+            "background-dark": "#112111",
+          },
+          fontFamily: {
+            "display": ["Be Vietnam Pro"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="flex min-h-screen">
+<aside class="w-64 bg-background-light dark:bg-background-dark p-6 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-3 mb-8">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYZzPVvNpoHeawygdBPUd32695TM08VplX0GnHMqqemEaGkxsI0E5sQODXrfBEp2MDzgIITugujuFU0ZXPjTsHC0f_uGBs0c1pTZ6rZbwgPQQjTWUrnBdUyjIleJwi_shM1ECD7ms1t16Lq6AMLa18Nw-wv1Ailt6RkVFnFm6LIEo9Kld5NMx1LiPGirEoGlObsu0q8-BnHkxIqRTP8M4GpfvWdYG38_JkbnZzabDOGavztQ28BT57TQISOVXG_lBA3Qu5skwhzLcX");'></div>
+<h1 class="text-background-dark dark:text-background-light text-lg font-bold">Sofia Rodriguez</h1>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/20 dark:bg-primary/20 text-background-dark dark:text-white font-bold" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M224,115.55V208a16,16,0,0,1-16,16H168a16,16,0,0,1-16-16V168a8,8,0,0,0-8-8H112a8,8,0,0,0-8,8v40a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V115.55a16,16,0,0,1,5.17-11.78l80-75.48.11-.11a16,16,0,0,1,21.53,0,1.14,1.14,0,0,0,.11.11l80,75.48A16,16,0,0,1,224,115.55Z"></path>
+</svg>
+<span>Panel de control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-background-dark/70 dark:text-background-light/70 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Zm-96-88v64a8,8,0,0,1-16,0V132.94l-4.42,2.22a8,8,0,0,1-7.16-14.32l16-8A8,8,0,0,1,112,120Zm59.16,30.45L152,176h16a8,8,0,0,1,0,16H136a8,8,0,0,1-6.4-12.8l28.78-38.37A8,8,0,1,0,145.07,132a8,8,0,1,1-13.85-8A24,24,0,0,1,176,136,23.76,23.76,0,0,1,171.16,150.45Z"></path>
+</svg>
+<span>Próximas citas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-background-dark/70 dark:text-background-light/70 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm-8-48A95.44,95.44,0,0,0,60.08,60.15C52.81,67.51,46.35,74.59,40,82V64a8,8,0,0,0-16,0v40a8,8,0,0,0,8,8H72a8,8,0,0,0,0-16H49c7.15-8.42,14.27-16.35,22.39-24.57a80,80,0,1,1,1.66,114.75,8,8,0,1,0-11,11.64A96,96,0,1,0,128,32Z"></path>
+</svg>
+<span>Historial de servicios</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-background-dark/70 dark:text-background-light/70 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M212,80a28,28,0,1,0,28,28A28,28,0,0,0,212,80Zm0,40a12,12,0,1,1,12-12A12,12,0,0,1,212,120ZM72,108a28,28,0,1,0-28,28A28,28,0,0,0,72,108ZM44,120a12,12,0,1,1,12-12A12,12,0,0,1,44,120ZM92,88A28,28,0,1,0,64,60,28,28,0,0,0,92,88Zm0-40A12,12,0,1,1,80,60,12,12,0,0,1,92,48Zm72,40a28,28,0,1,0-28-28A28,28,0,0,0,164,88Zm0-40a12,12,0,1,1-12,12A12,12,0,0,1,164,48Zm23.12,100.86a35.3,35.3,0,0,1-16.87-21.14,44,44,0,0,0-84.5,0A35.25,35.25,0,0,1,69,148.82,40,40,0,0,0,88,224a39.48,39.48,0,0,0,15.52-3.13,64.09,64.09,0,0,1,48.87,0,40,40,0,0,0,34.73-72ZM168,208a24,24,0,0,1-9.45-1.93,80.14,80.14,0,0,0-61.19,0,24,24,0,0,1-20.71-43.26,51.22,51.22,0,0,0,24.46-30.67,28,28,0,0,1,53.78,0,51.27,51.27,0,0,0,24.53,30.71A24,24,0,0,1,168,208Z"></path>
+</svg>
+<span>Mis mascotas</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-background-dark/70 dark:text-background-light/70 hover:bg-primary/10 dark:hover:bg-primary/10 transition-colors" href="#">
+<svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
+</svg>
+<span>Mi cuenta</span>
+</a>
+</nav>
+</div>
+</aside>
+<main class="flex-1 p-8 bg-background-light dark:bg-background-dark/50">
+<div class="max-w-4xl mx-auto">
+<h1 class="text-4xl font-bold text-background-dark dark:text-background-light mb-8">Panel de control</h1>
+<section class="mb-12">
+<h2 class="text-2xl font-bold text-background-dark dark:text-background-light mb-6">Próximas citas</h2>
+<div class="bg-background-light dark:bg-background-dark rounded-xl p-8 text-center flex flex-col items-center">
+<div class="w-full max-w-sm mb-6">
+<img alt="No upcoming appointments illustration" class="rounded-xl w-full h-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2ShFwUNmhTzOPyJ7ZpUsb6S4GLnrF9LEyqbABDx_GXIyfXG_1s4WXPuyZzHvi_JzW5Sg1qi-Zgap_-4uXNcJrABlndbNM1Qeypqowl48xtkTcJthITfGlT1lpr2GWAgHjDB4b-FU1qhH8U6EUNKDmdxubED6Ff1cDWwfBEAQvk-zwvVlML48vSdGXuOspK7XWoXeBQtu7jIq4TEcuSnGsEQa01QVIXb2iiNHojXVTde4rbEBLIQ9lVV4_ixUlZEuMNgGr6o7rXYLM"/>
+</div>
+<h3 class="text-xl font-bold text-background-dark dark:text-background-light mb-2">No hay citas próximas</h3>
+<p class="text-background-dark/70 dark:text-background-light/70 mb-6 max-w-md">Parece que no tienes ninguna cita programada. Reserva una cita para tu mascota hoy mismo.</p>
+<button class="bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-colors">
+              Reservar una cita
+            </button>
+</div>
+</section>
+<section>
+<h2 class="text-2xl font-bold text-background-dark dark:text-background-light mb-6">Historial de servicios</h2>
+<div class="bg-background-light dark:bg-background-dark rounded-xl p-8 text-center flex flex-col items-center">
+<div class="w-full max-w-sm mb-6">
+<img alt="No service history illustration" class="rounded-xl w-full h-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsq29g6IrICoy6Ko7ZhWWZryBy1YGcYFIq4SVR1wxij-IbNF2Yk8tGu1-0bnvMEUDIyDf-Fv2rWHgcguqNuGSbGPhxruT82PQXGEoaOFb1hvudmH8RU86PhxLPu2GauR4_IUdIagjxu2tXSAYn0nswkLNb5a8TsX1GTrIdnohs0mXOhQRBdHKSeDRgKYa5AUEsjCe1pSDUylyIT-3ZUBSurBfH1YA3hr8bf45OzgDGj3LzuwhNJg9eY4E3O3vFxPp6Mw_M-34fpZG0"/>
+</div>
+<h3 class="text-xl font-bold text-background-dark dark:text-background-light mb-2">No hay historial de servicios</h3>
+<p class="text-background-dark/70 dark:text-background-light/70 mb-6 max-w-md">Aún no has utilizado nuestros servicios. Una vez que completes una cita, podrás ver el historial aquí.</p>
+<button class="bg-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-primary/90 transition-colors">
+              Reservar una cita
+            </button>
+</div>
+</section>
+</div>
+</main>
+</div>
+
+</body></html>

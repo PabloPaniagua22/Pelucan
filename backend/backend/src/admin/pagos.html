@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Gestión de Pagos - Pelucan</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; background-color: #f8f8f8; }
+  h2 { margin-top: 10px; }
+  nav a { color: white; text-decoration: none; margin-right: 15px; }
+  input, button, select { margin: 5px; padding: 8px; }
+  table { border-collapse: collapse; margin-top: 20px; width: 100%; background: white; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+  th { background-color: #333; color: white; }
+  #formPago { display: none; margin-top: 20px; background: white; padding: 15px; border-radius: 8px; }
+  button { cursor: pointer; }
+</style>
+</head>
+<body>
+
+<!-- Barra de navegación -->
+<nav style="background-color: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px;">
+  <div style="font-weight: bold; font-size: 18px;">💈 Pelucan</div>
+  <div>
+    <a href="admin.html">Inicio</a>
+    <a href="turnos.html">Turnos</a>
+    <a href="usuarios.html">Usuarios</a>
+    <a href="servicios.html">Servicios</a>
+    <a href="pagos.html" style="font-weight:bold;">Pagos</a>
+  </div>
+</nav>
+
+<h2>Gestión de Pagos</h2>
+
+<!-- Botones principales -->
+<button onclick="mostrarFormulario()">Agregar Pago</button>
+<button onclick="window.history.back()">⬅️ Volver</button>
+
+<!-- Formulario de Pago -->
+<form id="formPago">
+  <input type="hidden" id="id">
+  
+  <label for="monto">Monto:</label>
+  <input type="number" id="monto" step="0.01" required>
+
+  <label for="metodo">Método de pago:</label>
+  <select id="metodo" required>
+    <option value="">Seleccione un método...</option>
+    <option value="efectivo">Efectivo</option>
+    <option value="tarjeta">Tarjeta</option>
+    <option value="transferencia">Transferencia</option>
+  </select>
+
+  <label for="turno_id">Turno asociado:</label>
+  <select id="turno_id" required>
+    <option value="">Seleccione un turno...</option>
+  </select>
+
+  <button type="submit">Guardar</button>
+  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
+</form>
+
+<!-- Tabla de Pagos -->
+<table id="tablaPagos">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Monto</th>
+      <th>Método</th>
+      <th>Fecha de Pago</th>
+      <th>Turno</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+const API = "http://localhost:3000/pagos";
+const TURNOS_API = "http://localhost:3000/turnos";
+const form = document.getElementById("formPago");
+const tbody = document.querySelector("#tablaPagos tbody");
+
+// Mostrar / Ocultar formulario
+function mostrarFormulario() { form.style.display = "block"; }
+function ocultarFormulario() { form.style.display = "none"; form.reset(); }
+
+// Cargar Turnos en el select
+async function cargarTurnos() {
+  const res = await fetch(TURNOS_API);
+  const data = await res.json();
+  const selectTurno = document.getElementById("turno_id");
+  selectTurno.innerHTML = '<option value="">Seleccione un turno...</option>';
+  data.forEach(t => {
+    const fechaObj = new Date(t.fecha);
+    const fechaFormateada = `${fechaObj.getDate().toString().padStart(2, '0')}/${(fechaObj.getMonth()+1).toString().padStart(2, '0')}/${fechaObj.getFullYear()}`;
+    selectTurno.innerHTML += `<option value="${t.id}">${t.id} - ${t.usuario?.nombre || 'Sin cliente'} (${fechaFormateada})</option>`;
+  });
+}
+
+// Cargar Pagos
+async function cargarPagos() {
+  const res = await fetch(API);
+  const data = await res.json();
+  tbody.innerHTML = "";
+  data.forEach(p => {
+    const fecha = new Date(p.fecha_pago).toLocaleDateString();
+    tbody.innerHTML += `
+      <tr>
+        <td>${p.id}</td>
+        <td>$${p.monto.toFixed(2)}</td>
+        <td>${p.metodo}</td>
+        <td>${fecha}</td>
+        <td>${p.turno_id || 'N/A'}</td>
+        <td>
+          <button onclick="editar(${p.id}, ${p.monto}, '${p.metodo}', ${p.turno_id})">✏️</button>
+          <button onclick="eliminar(${p.id})">🗑️</button>
+        </td>
+      </tr>`;
+  });
+}
+
+// Editar pago
+function editar(id, monto, metodo, turno_id) {
+  mostrarFormulario();
+  document.getElementById("id").value = id;
+  document.getElementById("monto").value = monto;
+  document.getElementById("metodo").value = metodo;
+  document.getElementById("turno_id").value = turno_id;
+}
+
+// Eliminar pago
+async function eliminar(id) {
+  if (confirm("¿Eliminar pago?")) {
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+    cargarPagos();
+  }
+}
+
+// Guardar pago
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const id = document.getElementById("id").value;
+  const datos = {
+    monto: parseFloat(document.getElementById("monto").value),
+    metodo: document.getElementById("metodo").value,
+    turno_id: Number(document.getElementById("turno_id").value)
+  };
+
+  let res;
+  if (id) {
+    res = await fetch(`${API}/${id}`, {
+      method: "PUT",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(datos)
+    });
+  } else {
+    res = await fetch(API, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(datos)
+    });
+  }
+
+  if (!res.ok) {
+    alert("Error al guardar el pago.");
+    return;
+  }
+
+  ocultarFormulario();
+  cargarPagos();
+});
+
+// Inicialización
+cargarTurnos();
+cargarPagos();
+</script>
+
+</body>
+</html>

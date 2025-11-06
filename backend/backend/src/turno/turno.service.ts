@@ -1,6 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EstadoTurno } from '@prisma/client';
+import { turno_estado } from '@prisma/client';
 
 interface TurnoDto {
   fecha: string;
@@ -20,14 +20,14 @@ export class TurnoService {
       throw new BadRequestException('Fecha inválida');
     if (!data.estado) throw new BadRequestException('Estado es requerido');
 
-    const estadoEnum = EstadoTurno[data.estado as keyof typeof EstadoTurno];
-    if (!estadoEnum) throw new BadRequestException('Estado inválido');
+    const turnoEstado = turno_estado[data.estado as keyof typeof turno_estado];
+    if (!turnoEstado) throw new BadRequestException('Estado inválido');
 
     return this.prisma.turno.create({
       data: {
         fecha: new Date(data.fecha),
         hora: data.hora,
-        estado: estadoEnum,
+        estado: turnoEstado,
         usuario_id: Number(data.usuario_id),
         servicio_id: Number(data.servicio_id),
       },
@@ -55,15 +55,15 @@ export class TurnoService {
       throw new BadRequestException('Fecha inválida');
     if (!data.estado) throw new BadRequestException('Estado es requerido');
 
-    const estadoEnum = EstadoTurno[data.estado as keyof typeof EstadoTurno];
-    if (!estadoEnum) throw new BadRequestException('Estado inválido');
+    const turnoEstado = turno_estado[data.estado as keyof typeof turno_estado];
+    if (!turnoEstado) throw new BadRequestException('Estado inválido');
 
     return this.prisma.turno.update({
       where: { id },
       data: {
         fecha: new Date(data.fecha),
         hora: data.hora,
-        estado: estadoEnum,
+        estado: turnoEstado,
         usuario_id: Number(data.usuario_id),
         servicio_id: Number(data.servicio_id),
       },
