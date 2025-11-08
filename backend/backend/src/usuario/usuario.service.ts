@@ -9,6 +9,30 @@ import { BadRequestException } from '@nestjs/common';
 export class UsuarioService {
   constructor(private prisma: PrismaService) {}
 
+  async obtenerPorId(id: number) {
+    return this.prisma.usuario.findUnique({
+      where: { id },
+      include: {
+        mascota: true,
+        turno: true,
+      },
+    });
+  }
+
+  async validarUsuario(correo: string, password: string) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { correo },
+    });
+
+    if (!usuario) return null;
+
+    // Verifica contraseña encriptada
+    const passwordValida = await bcrypt.compare(password, usuario.contrasena);
+    if (!passwordValida) return null;
+
+    return usuario;
+  }
+
   async findAll(): Promise<usuario[]> {
     return this.prisma.usuario.findMany();
   }

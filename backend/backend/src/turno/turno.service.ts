@@ -12,6 +12,7 @@ interface TurnoDto {
 
 @Injectable()
 export class TurnoService {
+  turnoRepository: any;
   constructor(private prisma: PrismaService) {}
 
   // Crear turno
@@ -73,5 +74,38 @@ export class TurnoService {
   // Eliminar turno
   async eliminarTurno(id: number) {
     return this.prisma.turno.delete({ where: { id } });
+  }
+
+  // ✅ Turnos activos del usuario
+  async obtenerTurnosPorUsuario(id: number) {
+    return this.prisma.turno.findMany({
+      where: {
+        usuario_id: id,
+        estado: {
+          in: ['Pendiente', 'Confirmado', 'Cancelado'], // o como lo nombres ('activo', 'reservado', etc.)
+        },
+      },
+      include: {
+        servicio: {
+          select: {
+            nombre: true,
+          },
+        },
+      },
+    });
+  }
+
+  // ✅ Historial de turnos completados
+  async obtenerHistorialPorUsuario(id: number) {
+    return this.prisma.turno.findMany({
+      where: { usuario_id: id, estado: 'Completado' },
+      include: {
+        servicio: {
+          select: {
+            nombre: true,
+          },
+        },
+      },
+    });
   }
 }

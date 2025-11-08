@@ -19,6 +19,13 @@ export class MascotaController {
     return this.mascotaService.findAll();
   }
 
+  // Obtener mascotas de un usuario
+  @Get('usuario/:id')
+  obtenerPorUsuario(@Param('id') id: string) {
+    console.log('Obteniendo mascotas del usuario:', id);
+    return this.mascotaService.obtenerPorUsuario(+id);
+  }
+
   @Post()
   create(@Body() data: client.mascota): Promise<client.mascota> {
     return this.mascotaService.create(data);

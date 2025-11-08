@@ -4,9 +4,13 @@ import * as express from 'express';
 import { join } from 'path';
 import cookieParser from 'cookie-parser';
 import { Request, Response, NextFunction } from 'express';
+import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+
+  // ✅ Habilita validaciones globales con class-validator
+  app.useGlobalPipes(new ValidationPipe());
 
   // ✅ Usa cookie-parser correctamente tipado
   app.use(cookieParser());
@@ -37,4 +41,4 @@ async function bootstrap(): Promise<void> {
   console.log('🚀 Servidor corriendo en http://localhost:3000');
 }
 
-bootstrap();
+void bootstrap();
