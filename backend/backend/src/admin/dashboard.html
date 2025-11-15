@@ -3,20 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <title>Panel Admin</title>
+
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 100px; }
-    button { margin: 10px; padding: 10px 15px; }
+    /* ======== ESTILOS GENERALES ======== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 32px;
+      color: #2d3436;
+    }
+
+    /* ======== GRID DEL DASHBOARD ======== */
+    .dashboard {
+      width: 90%;
+      max-width: 900px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    /* ======== TARJETAS ======== */
+    .card {
+      background: #ffffff;
+      padding: 25px;
+      text-align: center;
+      border-radius: 18px;
+      box-shadow: 0px 8px 18px rgba(0, 0, 0, 0.08);
+      transition: 0.25s;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.12);
+      background: #f1faff;
+    }
+
+    .logout {
+      background: #d63031;
+      color: white;
+    }
+
+    .logout:hover {
+      background: #b32626;
+    }
   </style>
+
 </head>
 <body>
+
   <h1>Panel de Administración</h1>
-  <button onclick="window.location.href='usuarios.html'">Gestor de Usuarios</button>
-  <button onclick="window.location.href='turnos.html'">Gestor de Turnos</button>
-  <button onclick="window.location.href='servicios.html'">Gestor de Servicios</button>
-  <button onclick="window.location.href='mascotas.html'">Gestor de Mascotas</button>
-  <button onclick="window.location.href='personal.html'">Gestor de Personal</button>
-  <button onclick="window.location.href='pagos.html'">Gestor de Pagos</button>
-  <button onclick="logout()">Cerrar Sesión</button>
+
+  <div class="dashboard">
+
+    <div class="card" onclick="window.location.href='usuarios.html'">
+      Gestor de Usuarios
+    </div>
+
+    <div class="card" onclick="window.location.href='turnos.html'">
+      Gestor de Turnos
+    </div>
+
+    <div class="card" onclick="window.location.href='servicios.html'">
+      Gestor de Servicios
+    </div>
+
+    <div class="card" onclick="window.location.href='mascotas.html'">
+      Gestor de Mascotas
+    </div>
+
+    <div class="card" onclick="window.location.href='personal.html'">
+      Gestor de Personal
+    </div>
+
+    <div class="card" onclick="window.location.href='pagos.html'">
+      Gestor de Pagos
+    </div>
+
+    <div class="card logout" onclick="logout()">
+      Cerrar Sesión
+    </div>
+
+  </div>
 
   <script>
   async function logout() {

@@ -1,63 +1,317 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Usuarios - Pelucan</title>
-<style>
-  body { font-family: Arial; padding: 20px; }
-  input, button { margin: 5px; padding: 8px; }
-  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-  #formUsuario { display: none; margin-top: 20px; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Usuarios - Pelucan</title>
+    <style>
+/* ======== ESTILO GLOBAL ======== */
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: #eef1f7;
+  margin: 0;
+  padding: 30px;
+  color: #333;
+}
 
-<h2>Gestión de Usuarios</h2>
+/* TITULOS */
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 700;
+  font-size: 28px;
+  color: #2d3748;
+  letter-spacing: -0.3px;
+}
 
-<button onclick="mostrarFormulario()">Agregar Usuario</button>
+/* ======== BOTONES ======== */
+button {
+  background: linear-gradient(135deg, #4a7dfc, #6a95ff);
+  border: none;
+  padding: 10px 18px;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  margin: 8px 3px;
+  transition: 0.25s ease;
+  box-shadow: 0 3px 10px rgba(74, 125, 252, 0.25);
+}
 
-<form id="formUsuario">
-  <input type="hidden" id="id">
-  <input type="text" id="nombre" placeholder="Nombre" required>
-  <input type="text" id="apellido" placeholder="Apellido" required>
-  <input type="email" id="correo" placeholder="Correo electrónico" required>
-  <input type="text" id="telefono" placeholder="Teléfono">
-  <input type="password" id="contrasena" placeholder="Contraseña" required>
-  <button type="submit">Guardar</button>
-  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
-</form>
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(74, 125, 252, 0.35);
+}
 
-<table id="tablaUsuarios">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Correo</th>
-      <th>Teléfono</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+/* Botón volver */
+button:last-child {
+  background: #6c757d;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
 
-<button onclick="window.history.back()">Volver</button>
+button:last-child:hover {
+  background: #555;
+  transform: translateY(-2px);
+}
 
-<script>
-const API = "http://localhost:3000/usuarios";
-const form = document.getElementById("formUsuario");
-const tbody = document.querySelector("#tablaUsuarios tbody");
+/* ======== FORMULARIO ======== */
+#formUsuario {
+  margin: 20px auto;
+  max-width: 520px;
+  padding: 25px;
+  display: block;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.3s ease;
+}
 
-function mostrarFormulario() { form.style.display = "block"; }
-function ocultarFormulario() { form.style.display = "none"; form.reset(); }
+#formUsuario input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0 15px 0;
+  border-radius: 10px;
+  border: 1px solid #cbd5e0;
+  background: #f8fafc;
+  transition: 0.25s ease;
+}
 
-async function cargarUsuarios() {
-  const res = await fetch(API);
-  const data = await res.json();
-  tbody.innerHTML = "";
-  data.forEach(u => {
-    tbody.innerHTML += `
+#formUsuario input:focus {
+  border-color: #4a7dfc;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(74, 125, 252, 0.18);
+  outline: none;
+}
+
+/* ======== TABLA ======== */
+table {
+  width: 100%;
+  margin-top: 25px;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+thead {
+  background: #4a7dfc;
+  color: white;
+}
+
+th, td {
+  padding: 14px;
+  text-align: center;
+  font-size: 15px;
+}
+
+tbody tr:nth-child(even) {
+  background: #f3f6ff;
+}
+
+tbody tr:hover {
+  background: #e1e8ff;
+  cursor: pointer;
+}
+
+/* ======== ACCIONES ======== */
+.acciones button {
+  padding: 7px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+  margin: 2px;
+}
+
+/* Editar */
+.acciones .editar {
+  background: #38b453;
+}
+
+.acciones .editar:hover {
+  background: #2e9043;
+  transform: scale(1.05);
+}
+
+/* Eliminar */
+.acciones .eliminar {
+  background: #e5423a;
+}
+
+.acciones .eliminar:hover {
+  background: #c7312a;
+  transform: scale(1.05);
+}
+
+/* ======== MODAL ======== */
+.modal {
+  display: block;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  animation: fadeIn 0.25s ease;
+}
+
+/* Contenido del modal */
+.modal-content {
+  background: white;
+  width: 430px;
+  padding: 25px 28px;
+  margin: 7% auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+.modal-content h3 {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+/* Botón cerrar */
+.close {
+  position: absolute;
+  font-size: 28px;
+  top: 12px;
+  right: 15px;
+  cursor: pointer;
+  color: #666;
+  transition: 0.2s;
+}
+
+.close:hover {
+  color: #000;
+  transform: scale(1.1);
+}
+
+/* Botones dentro del modal */
+.btn-guardar {
+  background: #4a7dfc;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn-guardar:hover {
+  background: #2e63e6;
+  transform: translateY(-2px);
+}
+
+.btn-cancelar {
+  background: #6c757d;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background: #555;
+  transform: translateY(-2px);
+}
+
+/* Animación */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+    </style>
+  </head>
+  <body>
+    <h2>Gestión de Usuarios</h2>
+
+    <!-- BOTÓN PARA ABRIR EL MODAL -->
+    <button onclick="abrirModalUsuario()">Agregar Usuario</button>
+
+    <!-- MODAL -->
+    <div id="modalUsuario" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="cerrarModalUsuario()">&times;</span>
+
+        <h3>Registrar Usuario</h3>
+
+        <form id="formUsuario">
+          <input type="hidden" id="id" />
+
+          <input type="text" id="nombre" placeholder="Nombre" required />
+          <input type="text" id="apellido" placeholder="Apellido" required />
+          <input
+            type="email"
+            id="correo"
+            placeholder="Correo electrónico"
+            required
+          />
+          <input type="text" id="telefono" placeholder="Teléfono" />
+          <input
+            type="password"
+            id="contrasena"
+            placeholder="Contraseña"
+            required
+          />
+
+          <button type="submit" class="btn-guardar">Guardar</button>
+          <button
+            type="button"
+            class="btn-cancelar"
+            onclick="cerrarModalUsuario()"
+          >
+            Cancelar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <table id="tablaUsuarios">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button onclick="window.history.back()">Volver</button>
+
+    <script>
+      const API = 'http://localhost:3000/usuarios';
+      const form = document.getElementById('formUsuario');
+      const tbody = document.querySelector('#tablaUsuarios tbody');
+
+      function mostrarFormulario() {
+        form.style.display = 'block';
+      }
+      function ocultarFormulario() {
+        form.style.display = 'none';
+        form.reset();
+      }
+
+      async function cargarUsuarios() {
+        const res = await fetch(API);
+        const data = await res.json();
+        tbody.innerHTML = '';
+        data.forEach((u) => {
+          tbody.innerHTML += `
       <tr>
         <td>${u.id}</td>
         <td>${u.nombre}</td>
@@ -69,69 +323,80 @@ async function cargarUsuarios() {
           <button onclick="eliminar(${u.id})">🗑️</button>
         </td>
       </tr>`;
-  });
-}
+        });
+      }
 
-function editar(id, nombre, apellido, correo, telefono, contrasena) {
-  mostrarFormulario();
-  document.getElementById("id").value = id;
-  document.getElementById("nombre").value = nombre;
-  document.getElementById("apellido").value = apellido;
-  document.getElementById("correo").value = correo;
-  document.getElementById("telefono").value = telefono;
-  document.getElementById("contrasena").value = contrasena;
-}
+      function editar(id, nombre, apellido, correo, telefono, contrasena) {
+        mostrarFormulario();
+        document.getElementById('id').value = id;
+        document.getElementById('nombre').value = nombre;
+        document.getElementById('apellido').value = apellido;
+        document.getElementById('correo').value = correo;
+        document.getElementById('telefono').value = telefono;
+        document.getElementById('contrasena').value = contrasena;
+      }
 
-async function eliminar(id) {
-  if (confirm("¿Eliminar usuario?")) {
-    await fetch(`${API}/${id}`, { method: "DELETE" });
-    cargarUsuarios();
-  }
-}
+      async function eliminar(id) {
+        if (confirm('¿Eliminar usuario?')) {
+          await fetch(`${API}/${id}`, { method: 'DELETE' });
+          cargarUsuarios();
+        }
+      }
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const id = document.getElementById("id").value;
-  const datos = {
-    nombre: document.getElementById("nombre").value,
-    apellido: document.getElementById("apellido").value,
-    correo: document.getElementById("correo").value,
-    telefono: document.getElementById("telefono").value,
-    contrasena: document.getElementById("contrasena").value
-  };
+      function abrirModalUsuario() {
+        document.getElementById('modalUsuario').style.display = 'block';
+      }
 
-  try { // <-- Agregamos try aquí
-    let res;
-    if (id) {
-      res = await fetch(`${API}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
+      function cerrarModalUsuario() {
+        document.getElementById('modalUsuario').style.display = 'none';
+        document.getElementById('formUsuario').reset();
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('id').value;
+        const datos = {
+          nombre: document.getElementById('nombre').value,
+          apellido: document.getElementById('apellido').value,
+          correo: document.getElementById('correo').value,
+          telefono: document.getElementById('telefono').value,
+          contrasena: document.getElementById('contrasena').value,
+        };
+
+        try {
+          // <-- Agregamos try aquí
+          let res;
+          if (id) {
+            res = await fetch(`${API}/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(datos),
+            });
+          } else {
+            res = await fetch(API, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(datos),
+            });
+          }
+
+          const resultado = await res.json(); // <-- capturamos la respuesta
+          if (!res.ok) {
+            // <-- si el backend devuelve error
+            alert(resultado.message); // <-- mostramos el error en pantalla
+            return; // no continuamos con reload de tabla
+          }
+
+          // Si todo bien, ocultamos el formulario y recargamos
+          ocultarFormulario();
+          cargarUsuarios();
+        } catch (err) {
+          // <-- captura de errores de conexión u otros
+          console.error(err);
+          alert('Error de conexión con el servidor.');
+        }
       });
-    } else {
-      res = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
-      });
-    }
-
-    const resultado = await res.json(); // <-- capturamos la respuesta
-    if (!res.ok) { // <-- si el backend devuelve error
-      alert(resultado.message); // <-- mostramos el error en pantalla
-      return; // no continuamos con reload de tabla
-    }
-
-    // Si todo bien, ocultamos el formulario y recargamos
-    ocultarFormulario();
-    cargarUsuarios();
-
-  } catch (err) { // <-- captura de errores de conexión u otros
-    console.error(err);
-    alert("Error de conexión con el servidor.");
-  }
-});
-cargarUsuarios();
-</script>
-</body>
+      cargarUsuarios();
+    </script>
+  </body>
 </html>

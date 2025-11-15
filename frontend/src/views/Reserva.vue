@@ -1,20 +1,6 @@
 <template>
   <div
     class="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-neutral-800 dark:text-neutral-200">
-    <!-- Header -->
-    <header class="border-b border-primary/20 dark:border-primary/30">
-      <div class="container mx-auto flex items-center justify-between px-4 py-3">
-        <div class="flex items-center gap-3">
-          <svg class="h-8 w-8 text-primary" fill="none" viewBox="0 0 48 48">
-            <path
-              d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z"
-              fill="currentColor" />
-          </svg>
-          <h1 class="text-xl font-bold">Pelucan</h1>
-        </div>
-      </div>
-    </header>
-
     <!-- Main -->
     <main class="flex-grow container mx-auto px-4 py-8">
       <div class="max-w-2xl mx-auto bg-white dark:bg-background-dark shadow-lg rounded-xl p-6 md:p-8">

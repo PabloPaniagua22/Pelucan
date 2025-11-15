@@ -4,52 +4,321 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gestión de Mascotas</title>
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f9fa; }
-    h1 { color: #333; }
-    form { display: none; flex-direction: column; gap: 8px; margin-top: 10px; }
-    input, button { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; }
-    button { cursor: pointer; }
-    .btn-back { margin-bottom: 15px; background: #d9534f; color: white; }
-    .btn-toggle { background: #0275d8; color: white; }
-    #duenoList { border: 1px solid #ccc; max-height: 100px; overflow-y: auto; display: none; background: white; position: absolute; z-index: 10; }
-    #duenoList div { padding: 5px; cursor: pointer; }
-    #duenoList div:hover { background: #f0f0f0; }
-    .dueno-container { position: relative; }
+    /* ======== MODAL OVERLAY ======== */
+  .modal-overlay {
+    display: none; 
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  /* ======== MODAL ======== */
+  .modal {
+    background: white;
+    width: 95%;
+    max-width: 450px;
+    padding: 25px;
+    border-radius: 18px;
+    position: relative;
+    animation: fadeIn 0.25s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .modal-title {
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* ======== BOTÓN CERRAR ======== */
+  .btn-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .btn-close:hover {
+    background: #c0392b;
+  }
+
+  /* ======== BOTÓN GUARDAR ======== */
+  .btn-save {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-save:hover {
+    background: #27ae60;
+  }
+
+  @keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+    /* ======== RESET ======== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      padding: 25px;
+      color: #2d3436;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    /* ======== BOTÓN VOLVER ======== */
+    .btn-back {
+      background: #d63031;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 20px;
+      transition: 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #b32626;
+    }
+
+    /* ======== BOTÓN AGREGAR ======== */
+    .btn-toggle {
+      background: #0984e3;
+      color: white;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .btn-toggle:hover {
+      background: #0a6fbd;
+    }
+
+    /* ======== FORMULARIO ======== */
+    form {
+      display: none;
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 500px;
+    }
+
+    input, select, button[type="submit"] {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #dcdde1;
+      background: #fafafa;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #0984e3;
+      box-shadow: 0 0 0 3px rgba(0,132,227,0.25);
+      outline: none;
+      background: #fff;
+    }
+
+    button[type="submit"] {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button[type="submit"]:hover {
+      background: #27ae60;
+    }
+
+    /* ======== BUSCADOR DUEÑO ======== */
+    .dueno-container {
+      position: relative;
+    }
+
+    #duenoList {
+      border: 1px solid #ccc;
+      position: absolute;
+      background: white;
+      width: 100%;
+      max-height: 150px;
+      overflow-y: auto;
+      border-radius: 8px;
+      display: none;
+      z-index: 50;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #duenoList div {
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    #duenoList div:hover {
+      background: #f1faff;
+    }
+
+    /* ======== TABLA ======== */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      margin-top: 25px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.06);
+    }
+
+    th {
+      background: #0984e3;
+      color: white;
+      padding: 14px;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    tr:hover {
+      background: #f1faff;
+    }
+
+    /* Botones de acciones */
+    .btn-edit {
+      background: #f1c40f;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-edit:hover {
+      background: #d4ac0d;
+    }
+
+    .btn-delete {
+      background: #e74c3c;
+      color: white;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width: 600px) {
+      form {
+        width: 100%;
+      }
+
+      table {
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
+
 <body>
+
   <button class="btn-back" onclick="window.location.href='dashboard.html'">⬅ Volver atrás</button>
+
   <h1>Gestión de Mascotas</h1>
-  <button class="btn-toggle" onclick="toggleForm()">➕ Agregar Mascota</button>
 
-  <form id="mascotaForm">
-    <input type="hidden" id="mascotaId" />
-    <input type="text" id="nombre" placeholder="Nombre" required />
-    <label for="especie" class="block mb-1 font-medium">Especie</label>
-    <select id="especie" v-model="form.especie" class="w-full border border-primary/30 rounded-lg px-3 py-2" required>
-      <option value="">Seleccioná una especie</option>
-      <option value="Perro">Perro</option>
-      <option value="Gato">Gato</option>
-      <option value="Loro">Loro</option>
-      <option value="Conejo">Conejo</option>
-      <option value="Otro">Otro</option>
-    </select>
+<!-- BOTÓN PARA ABRIR EL MODAL -->
+<button class="btn-toggle" onclick="openModal()">➕ Agregar Mascota</button>
 
-    <input type="number" id="edad" placeholder="Edad" required />
+<!-- OVERLAY DEL MODAL -->
+<div id="modalOverlay" class="modal-overlay">
 
-    <!-- Buscador de dueño -->
-    <div class="dueno-container">
-      <input type="text" id="duenoNombre" placeholder="Nombre del dueño" autocomplete="off" required />
-      <input type="hidden" id="dueno_id" />
-      <div id="duenoList" style="border:1px solid #ccc; display:none; max-height:150px; overflow-y:auto; position:absolute; background:white; z-index:10;"></div>
-    </div>
+  <!-- CONTENIDO DEL MODAL -->
+  <div class="modal">
 
-    <button type="submit">Guardar</button>
-  </form>
+    <h2 class="modal-title">Agregar / Editar Mascota</h2>
 
+    <form id="mascotaForm">
+
+      <input type="hidden" id="mascotaId" />
+
+      <input type="text" id="nombre" placeholder="Nombre" required />
+
+      <select id="especie" required>
+        <option value="">Seleccioná una especie</option>
+        <option value="Perro">Perro</option>
+        <option value="Gato">Gato</option>
+        <option value="Loro">Loro</option>
+        <option value="Conejo">Conejo</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <input type="number" id="edad" placeholder="Edad" required />
+
+      <!-- Buscador de dueño -->
+      <div class="dueno-container">
+        <input type="text" id="duenoNombre" placeholder="Nombre del dueño" autocomplete="off" required />
+        <input type="hidden" id="dueno_id" />
+        <div id="duenoList"></div>
+      </div>
+
+      <button type="submit" class="btn-save">Guardar</button>
+    </form>
+
+    <button class="btn-close" onclick="closeModal()">✖</button>
+
+  </div>
+</div>
+
+  <!-- TABLA -->
   <table>
     <thead>
       <tr>
@@ -153,6 +422,16 @@ function editar(id, nombre, especie, edad, idDueno, nombreDueno) {
   duenoNombre.value = nombreDueno;
   dueno_id.value = idDueno;
   form.style.display = 'flex';
+}
+
+function openModal() {
+  document.getElementById("modalOverlay").style.display = "flex";
+}
+
+function closeModal() {
+  document.getElementById("modalOverlay").style.display = "none";
+  document.getElementById("mascotaForm").reset();
+  document.getElementById("mascotaId").value = "";
 }
 
 // Función para eliminar mascota

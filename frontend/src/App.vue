@@ -1,8 +1,17 @@
 <template>
-  <div class="min-h-screen flex flex-col bg-background-light dark:bg-background-dark">
-    <RouterView class="flex-grow" />
-  </div>
+  <Navbar />
+
+  <main class="min-h-screen">
+    <RouterView />
+  </main>
+
+  <Footer />
 </template>
+
+<script setup>
+import Navbar from "./components/Navbar.vue"
+import Footer from "./components/Footer.vue"
+</script>
 
 <style>
 html, body, #app {

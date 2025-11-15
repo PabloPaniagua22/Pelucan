@@ -3,20 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <title>Login Admin</title>
+
   <style>
-    body { font-family: Arial; text-align: center; margin-top: 100px; }
-    input, button { margin: 8px; padding: 8px; width: 200px; }
+    /* ======== ESTILOS GENERALES ======== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
+
+    body {
+      background: #eaf0f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* ======== CONTENEDOR DEL LOGIN ======== */
+    .login-box {
+      background: #ffffff;
+      padding: 35px;
+      width: 350px;
+      border-radius: 18px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.10);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      color: #2d3436;
+      font-size: 26px;
+    }
+
+    /* ======== CAMPOS ======== */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #dcdde1;
+      background: #fafafa;
+      transition: 0.25s;
+      font-size: 16px;
+    }
+
+    input:focus {
+      border-color: #0984e3;
+      box-shadow: 0 0 0 3px rgba(0,132,227,0.2);
+      outline: none;
+    }
+
+    /* ======== BOTÓN ======== */
+    button {
+      width: 100%;
+      background: #0984e3;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #0a6fbd;
+    }
+
+    /* ======== MENSAJE ======== */
+    #mensaje {
+      margin-top: 15px;
+      font-weight: 600;
+      color: #d63031;
+    }
   </style>
+
 </head>
 <body>
-  <h1>Ingreso Administrador</h1>
-  <input id="username" type="text" placeholder="Usuario">
-  <input id="password" type="password" placeholder="Contraseña">
-  <br>
-  <button onclick="login()">Ingresar</button>
 
-  <p id="mensaje"></p>
+  <div class="login-box">
+    <h1>Ingreso Administrador</h1>
 
+    <input id="username" type="text" placeholder="Usuario">
+    <input id="password" type="password" placeholder="Contraseña">
+
+    <button onclick="login()">Ingresar</button>
+
+    <p id="mensaje"></p>
+  </div>
+  
   <script>
     async function login() {
       const username = document.getElementById('username').value;

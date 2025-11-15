@@ -3,50 +3,181 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gestión de Personal</title>
+  <title>Gestión de Personal - Pelucan</title>
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #fafafa; }
-    h1 { color: #333; }
-    form { margin-top: 15px; display: none; flex-direction: column; gap: 8px; }
-    input, select, button { padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-    button { cursor: pointer; }
-    .btn-back { margin-bottom: 15px; background: #d9534f; color: white; }
-    .btn-toggle { background: #0275d8; color: white; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 25px;
+      color: #333;
+    }
+
+    /* BOTONES */
+    .btn {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 6px;
+      background: #222;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      margin: 10px;
+    }
+
+    .btn:hover {
+      background: #000;
+    }
+
+    .btn-warning {
+      background: #e8b000;
+    }
+
+    .btn-danger {
+      background: #c62828;
+    }
+
+    .btn-blue {
+      background: #0275d8;
+    }
+
+    /* TABLA */
+    table {
+      width: 95%;
+      margin: 20px auto;
+      background: white;
+      border-radius: 10px;
+      border-collapse: collapse;
+      overflow: hidden;
+    }
+
+    th {
+      background: #222;
+      color: white;
+      padding: 12px;
+    }
+
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+      background: #f1f1f1;
+    }
+
+    /* MODAL */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      width: 420px;
+      padding: 25px;
+      border-radius: 12px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .close {
+      float: right;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    form label {
+      margin-top: 10px;
+      font-weight: bold;
+      display: block;
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 9px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      margin-top: 5px;
+      background: #fafafa;
+    }
   </style>
 </head>
+
 <body>
-  <button class="btn-back" onclick="window.location.href='dashboard.html'">⬅ Volver atrás</button>
-  <h1>Gestión de Personal</h1>
-  <button class="btn-toggle" onclick="toggleForm()">➕ Agregar Personal</button>
 
-  <form id="personalForm">
-    <input type="hidden" id="personalId" />
-    <input type="text" id="nombre" placeholder="Nombre" required />
-    <input type="text" id="apellido" placeholder="Apellido" required />
-    <select id="personal_especialidad" required>
-      <option value="" disabled selected>Seleccione una especialidad</option>
-      <option value="peluquero">Peluquero</option>
-      <option value="veterinario">Veterinario</option>
-    </select>
-    <input type="text" id="telefono" placeholder="Teléfono" />
-    <button type="submit">Guardar</button>
-  </form>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellido</th>
-        <th>Especialidad</th>
-        <th>Teléfono</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tablaPersonal"></tbody>
-  </table>
+<h1>Gestión de Personal</h1>
+
+<div style="text-align:center;">
+  <button class="btn" onclick="abrirModalPersonal()">➕ Agregar Personal</button>
+  <button class="btn btn-warning" onclick="history.back()">⬅ Volver</button>
+</div>
+
+<!-- ---------------- MODAL ---------------- -->
+<div id="modalPersonal" class="modal">
+  <div class="modal-content">
+
+    <span class="close" onclick="cerrarModalPersonal()">&times;</span>
+    <h3 style="text-align:center;">Registrar Personal</h3>
+
+    <form id="personalForm">
+      <input type="hidden" id="personalId">
+
+      <label>Nombre:</label>
+      <input type="text" id="nombre" required>
+
+      <label>Apellido:</label>
+      <input type="text" id="apellido" required>
+
+      <label>Especialidad:</label>
+      <select id="personal_especialidad" required>
+        <option value="">Seleccione una...</option>
+        <option value="peluquero">Peluquero</option>
+        <option value="veterinario">Veterinario</option>
+      </select>
+
+      <label>Teléfono:</label>
+      <input type="text" id="telefono">
+
+      <button class="btn" type="submit">Guardar</button>
+      <button class="btn btn-danger" type="button" onclick="cerrarModalPersonal()">Cancelar</button>
+    </form>
+
+  </div>
+</div>
+
+<!-- TABLA -->
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Especialidad</th>
+      <th>Teléfono</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="tablaPersonal"></tbody>
+</table>
 
   <script>
     const form = document.getElementById('personalForm');
@@ -72,6 +203,21 @@
           </td>
         </tr>
       `).join('');
+    }
+    
+    function abrirModalPersonal() {
+      document.getElementById("modalPersonal").style.display = "flex";
+    }
+
+    function cerrarModalPersonal() {
+      document.getElementById("modalPersonal").style.display = "none";
+      document.getElementById("personalForm").reset();
+    }
+
+    // Cerrar si se hace clic afuera
+    window.onclick = function(e) {
+      const modal = document.getElementById("modalPersonal");
+      if (e.target === modal) modal.style.display = "none";
     }
 
     form.addEventListener('submit', async (e) => {

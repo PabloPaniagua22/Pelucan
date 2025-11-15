@@ -2,39 +2,6 @@
   <div
     class="min-h-screen font-display bg-background-light dark:bg-background-dark text-foreground-light dark:text-foreground-dark flex flex-col">
 
-    <!-- HEADER -->
-    <header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-20">
-          <div class="flex items-center gap-2">
-            <svg class="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
-            </svg>
-            <h2 class="text-2xl font-bold text-stone-900 dark:text-white">Pelucan</h2>
-          </div>
-
-          <nav class="hidden md:flex items-center gap-8">
-            <RouterLink to="/" class="text-sm font-medium hover:text-primary transition-colors">Inicio</RouterLink>
-            <RouterLink to="/servicios" class="text-sm font-medium hover:text-primary transition-colors">Servicios</RouterLink>
-            <RouterLink to="/nosotros" class="text-sm font-medium hover:text-primary transition-colors">Nosotros</RouterLink>
-            <RouterLink to="/contacto" class="text-sm font-medium hover:text-primary transition-colors">Contacto</RouterLink>
-          </nav>
-
-          <div class="flex items-center gap-4">
-            <RouterLink
-              to="/reservar"
-              class="bg-primary text-black font-bold text-sm px-6 py-2.5 rounded-full hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark">
-              Reservar Turno
-            </RouterLink>
-            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-              style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD5chTuiW6o0O0XeikTsxV4U2E29Asj1M5MCbDgUwonCneiXiALEPzdul9WAHjJuDwIZbpMs9UKpHZlR3gSCIxeSAUicWrA38-SunycYHyMYhxUSfPQsMVkFwS9vbo_z-MLdz4_1UkDDyPCLgv1hlRnUnEBSIDOKEYyiWhXW88y-KNIfvQSJbDR-aXFhz4nVJfu6n0wlawte6eLecJD1r-tat5OhW00yGklhghUNk0rnuBnO3z1NEVQdJ10V8nMyIqIqGisx29TO0qI");'>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
     <!-- MAIN -->
     <main class="flex-grow">
       <!-- HERO -->
@@ -50,11 +17,7 @@
               En Pelucan, consentimos a tu mascota con servicios de peluquería canina de primera calidad.
               ¡Reserva ahora y dale a tu perro el cuidado que se merece!
             </p>
-            <RouterLink
-              to="/reservar"
-              class="mt-8 inline-block bg-primary text-black font-bold text-base px-8 py-3 rounded-full hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-black/50">
-              Reservar Turno
-            </RouterLink>
+            <BotonReservar />
           </div>
         </div>
       </section>
@@ -80,29 +43,116 @@
           </div>
         </div>
       </section>
-    </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-background-light dark:bg-background-dark border-t border-stone-200 dark:border-stone-800">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div class="flex items-center gap-2">
-            <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
-            </svg>
-            <h2 class="text-lg font-bold text-stone-900 dark:text-white">Pelucan</h2>
+      <!-- TESTIMONIOS-->
+      <section class="py-16 sm:py-24 bg-primary/10 dark:bg-primary/5">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Testimonios</h2>
+            <p class="mt-3 max-w-2xl mx-auto text-base text-stone-600 dark:text-stone-400">Nuestros clientes nos aman. Y
+              sus mascotas también.</p>
           </div>
-          <p class="text-sm text-stone-500 dark:text-stone-500">
-            © 2024 Pelucan. Todos los derechos reservados.
-          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-background-light dark:bg-background-dark p-6 rounded-lg shadow-sm">
+              <div class="flex items-start gap-4">
+                <div class="w-24 h-24 bg-cover bg-center rounded-full flex-shrink-0"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCUgXztUk0AjhvNeRaT2eGo9pTPhDGrWS3s7RIydnXGElPIqN3kQTxbidWfP0khm1xgRuJ1fQJ_3Ne4exxVSrIIs8C2FryuZ_px41hAW7RbCULNn_53aO7FxUSp0xjWEPQzEmbCc2mqXz4tWJmVilYaQ9mAZDFzdd-YueRgNtR7TJBj_QGGYKZc-Famdea7h4_FxoSp3nFCX2ulkm_aUwxBd8-AglfpVjCEFXzV0jBNEI2iHATNyo19PPhNICI_POkSTn-2ABDwkZ0I");'>
+                </div>
+                <div>
+                  <p class="text-stone-700 dark:text-stone-300">"Max siempre sale contento y con un aspecto increíble.
+                    ¡Los recomiendo totalmente!"</p>
+                  <p class="mt-4 font-bold text-stone-900 dark:text-white">- Sofia Ramirez</p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-background-light dark:bg-background-dark p-6 rounded-lg shadow-sm">
+              <div class="flex items-start gap-4">
+                <div class="w-24 h-24 bg-cover bg-center rounded-full flex-shrink-0"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCOzek1ZktwQyrQ32RRA1hCnRDM59E4jpzoODvqqm1ZH5nwRh6m6lrJxFxO1R5MMu3gJPhNbhXAZCi300gq_fANN7EUX6K-21rfw7Ci4WURVgRXuos_j05o64iKDD8Jo1JyQkypRB1-L6fQZtE1eIuG4MYeaMfLpbAbQSNFKQZzbErQBdpq-34mM9LOWXtChlr1mKapA5HwQe0qFEXrA9_pf9FA8mQxUFG7BXYVWJ1uZNdItx75D7aK7mYLc_CuFg6AtbfJR92NBFF-");'>
+                </div>
+                <div>
+                  <p class="text-stone-700 dark:text-stone-300">"El personal es muy amable y profesional. Se nota que
+                    aman a los animales. Mi perrita Luna se siente muy cómoda con ellos."</p>
+                  <p class="mt-4 font-bold text-stone-900 dark:text-white">- Carlos Mendoza</p>
+                </div>
+              </div>
+            </div>
+            <div class="bg-background-light dark:bg-background-dark p-6 rounded-lg shadow-sm">
+              <div class="flex items-start gap-4">
+                <div class="w-24 h-24 bg-cover bg-center rounded-full flex-shrink-0"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDrnKbAMfUxhM02McoVdIIgL9BrJwHkn1UFk4-B3F4geBy3QXIm6YGlogGog9qq_1RjBmzqIK8gvJZSAHVanCdgCzFoK-CLRce-eqQAuD_exFggSJRxi2WVVySi-akczLKfnCR-31Vj_Tg6mN_HtSF2XDa_tkF0-kS24BU12CaUNokJmGzSDFgYqNQfnFq092UDp4yUejrJpKIA36uDaV2AJ2HesPJknIYXAtw8jo_ixhjYMv5xILYUFzneW5GUSIr-pELRIiCUjPKC");'>
+                </div>
+                <div>
+                  <p class="text-stone-700 dark:text-stone-300">"La calidad del servicio es excelente. Mi perro, Rocky,
+                    tiene el pelo muy delicado y siempre lo dejan re bien."</p>
+                  <p class="mt-4 font-bold text-stone-900 dark:text-white">- Ana Torres</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </footer>
+      </section>
+
+      <!-- BENEFICIOS -->
+      <section class="py-16 sm:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-stone-900 dark:text-white">Beneficios de elegirnos</h2>
+            <p class="mt-3 max-w-2xl mx-auto text-base text-stone-600 dark:text-stone-400">Cuidado excepcional para tu
+              compañero fiel.</p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full">
+                <span class="material-symbols-outlined text-primary">check_circle</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-stone-900 dark:text-white">Profesionales calificados</h3>
+                <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">Nuestro equipo está formado por estilistas
+                  caninos con amplia experiencia y pasión por los animales.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full">
+                <span class="material-symbols-outlined text-primary">health_and_safety</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-stone-900 dark:text-white">Ambiente seguro y relajante</h3>
+                <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">Instalaciones diseñadas para garantizar la
+                  comodidad y seguridad de tu mascota.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full">
+                <span class="material-symbols-outlined text-primary">spa</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-stone-900 dark:text-white">Productos de alta calidad</h3>
+                <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">Utilizamos productos hipoalergénicos y de
+                  marcas reconocidas para cuidar la piel y el pelaje.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="bg-primary/20 p-3 rounded-full">
+                <span class="material-symbols-outlined text-primary">volunteer_activism</span>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-stone-900 dark:text-white">Atención personalizada</h3>
+                <p class="mt-1 text-sm text-stone-600 dark:text-stone-400">Nos adaptamos a las necesidades específicas
+                  de cada mascota, brindando un servicio individualizado.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 </template>
 
 <script setup>
+import BotonReservar from '../components/BotonReservar.vue'
+</script>
+<script>
 const servicios = [
   {
     titulo: "Baño y cepillado",

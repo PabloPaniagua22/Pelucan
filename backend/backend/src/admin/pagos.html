@@ -1,110 +1,236 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Gestión de Pagos - Pelucan</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 20px; background-color: #f8f8f8; }
-  h2 { margin-top: 10px; }
-  nav a { color: white; text-decoration: none; margin-right: 15px; }
-  input, button, select { margin: 5px; padding: 8px; }
-  table { border-collapse: collapse; margin-top: 20px; width: 100%; background: white; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-  th { background-color: #333; color: white; }
-  #formPago { display: none; margin-top: 20px; background: white; padding: 15px; border-radius: 8px; }
-  button { cursor: pointer; }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gestión de Pagos - Pelucan</title>
 
-<!-- Barra de navegación -->
-<nav style="background-color: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px;">
-  <div style="font-weight: bold; font-size: 18px;">💈 Pelucan</div>
-  <div>
-    <a href="admin.html">Inicio</a>
-    <a href="turnos.html">Turnos</a>
-    <a href="usuarios.html">Usuarios</a>
-    <a href="servicios.html">Servicios</a>
-    <a href="pagos.html" style="font-weight:bold;">Pagos</a>
-  </div>
-</nav>
+    <style>
+      /* -------- GENERAL -------- */
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f2f2f2;
+        padding: 0;
+        margin: 0;
+      }
 
-<h2>Gestión de Pagos</h2>
+      h2 {
+        margin: 20px 0;
+        text-align: center;
+        color: #333;
+      }
 
-<!-- Botones principales -->
-<button onclick="mostrarFormulario()">Agregar Pago</button>
-<button onclick="window.history.back()">⬅️ Volver</button>
 
-<!-- Formulario de Pago -->
-<form id="formPago">
-  <input type="hidden" id="id">
-  
-  <label for="monto">Monto:</label>
-  <input type="number" id="monto" step="0.01" required>
+      /* -------- BOTONES -------- */
+      .btn {
+        padding: 10px 16px;
+        background: #222;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        margin: 8px 5px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
 
-  <label for="metodo">Método de pago:</label>
-  <select id="metodo" required>
-    <option value="">Seleccione un método...</option>
-    <option value="efectivo">Efectivo</option>
-    <option value="tarjeta">Tarjeta</option>
-    <option value="transferencia">Transferencia</option>
-  </select>
+      .btn:hover {
+        background: #000;
+      }
 
-  <label for="turno_id">Turno asociado:</label>
-  <select id="turno_id" required>
-    <option value="">Seleccione un turno...</option>
-  </select>
+      .btn-warning {
+        background: #e8b000;
+      }
+      .btn-danger {
+        background: #c62828;
+      }
 
-  <button type="submit">Guardar</button>
-  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
-</form>
+      /* -------- TABLA -------- */
+      table {
+        width: 95%;
+        margin: 25px auto;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+      }
 
-<!-- Tabla de Pagos -->
-<table id="tablaPagos">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Monto</th>
-      <th>Método</th>
-      <th>Fecha de Pago</th>
-      <th>Turno</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+      th {
+        background: #222;
+        color: white;
+        padding: 12px;
+      }
 
-<script>
-const API = "http://localhost:3000/pagos";
-const TURNOS_API = "http://localhost:3000/turnos";
-const form = document.getElementById("formPago");
-const tbody = document.querySelector("#tablaPagos tbody");
+      td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
 
-// Mostrar / Ocultar formulario
-function mostrarFormulario() { form.style.display = "block"; }
-function ocultarFormulario() { form.style.display = "none"; form.reset(); }
+      tr:hover {
+        background: #f1f1f1;
+      }
 
-// Cargar Turnos en el select
-async function cargarTurnos() {
-  const res = await fetch(TURNOS_API);
-  const data = await res.json();
-  const selectTurno = document.getElementById("turno_id");
-  selectTurno.innerHTML = '<option value="">Seleccione un turno...</option>';
-  data.forEach(t => {
-    const fechaObj = new Date(t.fecha);
-    const fechaFormateada = `${fechaObj.getDate().toString().padStart(2, '0')}/${(fechaObj.getMonth()+1).toString().padStart(2, '0')}/${fechaObj.getFullYear()}`;
-    selectTurno.innerHTML += `<option value="${t.id}">${t.id} - ${t.usuario?.nombre || 'Sin cliente'} (${fechaFormateada})</option>`;
-  });
-}
+      /* -------- MODAL -------- */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(3px);
+        justify-content: center;
+        align-items: center;
+      }
 
-// Cargar Pagos
-async function cargarPagos() {
-  const res = await fetch(API);
-  const data = await res.json();
-  tbody.innerHTML = "";
-  data.forEach(p => {
-    const fecha = new Date(p.fecha_pago).toLocaleDateString();
-    tbody.innerHTML += `
+      .modal-content {
+        background: white;
+        width: 420px;
+        padding: 25px;
+        border-radius: 12px;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .close {
+        float: right;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      /* -------- FORMULARIO -------- */
+      form label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+      }
+
+      form input,
+      form select {
+        width: 100%;
+        padding: 9px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #bbb;
+        background: #fafafa;
+      }
+
+      form button {
+        width: 100%;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <h2>Gestión de Pagos</h2>
+
+    <div style="text-align: center">
+      <button class="btn" onclick="abrirModalPago()">➕ Agregar Pago</button>
+      <button class="btn btn-warning" onclick="history.back()">
+        ⬅ Volver
+      </button>
+    </div>
+
+    <!-- ------------------ MODAL ------------------ -->
+    <div id="modalPago" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="cerrarModalPago()">&times;</span>
+        <h3 style="text-align: center">Registrar Pago</h3>
+
+        <form id="formPago">
+          <input type="hidden" id="id" />
+
+          <label>Monto:</label>
+          <input type="number" id="monto" step="0.01" required />
+
+          <label>Método de Pago:</label>
+          <select id="metodo" required>
+            <option value="">Seleccione...</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="tarjeta">Tarjeta</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+
+          <label>Turno asociado:</label>
+          <select id="turno_id" required>
+            <option value="">Seleccione...</option>
+          </select>
+
+          <button class="btn" type="submit">Guardar</button>
+          <button
+            class="btn btn-danger"
+            type="button"
+            onclick="cerrarModalPago()"
+          >
+            Cancelar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- ------------------ TABLA ------------------ -->
+    <table id="tablaPagos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Monto</th>
+          <th>Método</th>
+          <th>Fecha</th>
+          <th>Turno</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script>
+      const API = 'http://localhost:3000/pagos';
+      const TURNOS_API = 'http://localhost:3000/turnos';
+      const form = document.getElementById('formPago');
+      const tbody = document.querySelector('#tablaPagos tbody');
+
+      // Mostrar / Ocultar formulario
+      function mostrarFormulario() {
+        form.style.display = 'block';
+      }
+      function ocultarFormulario() {
+        form.style.display = 'none';
+        form.reset();
+      }
+
+      // Cargar Turnos en el select
+      async function cargarTurnos() {
+        const res = await fetch(TURNOS_API);
+        const data = await res.json();
+        const selectTurno = document.getElementById('turno_id');
+        selectTurno.innerHTML =
+          '<option value="">Seleccione un turno...</option>';
+        data.forEach((t) => {
+          const fechaObj = new Date(t.fecha);
+          const fechaFormateada = `${fechaObj.getDate().toString().padStart(2, '0')}/${(fechaObj.getMonth() + 1).toString().padStart(2, '0')}/${fechaObj.getFullYear()}`;
+          selectTurno.innerHTML += `<option value="${t.id}">${t.id} - ${t.usuario?.nombre || 'Sin cliente'} (${fechaFormateada})</option>`;
+        });
+      }
+
+      // Cargar Pagos
+      async function cargarPagos() {
+        const res = await fetch(API);
+        const data = await res.json();
+        tbody.innerHTML = '';
+        data.forEach((p) => {
+          const fecha = new Date(p.fecha_pago).toLocaleDateString();
+          tbody.innerHTML += `
       <tr>
         <td>${p.id}</td>
         <td>$${p.monto.toFixed(2)}</td>
@@ -116,64 +242,78 @@ async function cargarPagos() {
           <button onclick="eliminar(${p.id})">🗑️</button>
         </td>
       </tr>`;
-  });
-}
+        });
+      }
 
-// Editar pago
-function editar(id, monto, metodo, turno_id) {
-  mostrarFormulario();
-  document.getElementById("id").value = id;
-  document.getElementById("monto").value = monto;
-  document.getElementById("metodo").value = metodo;
-  document.getElementById("turno_id").value = turno_id;
-}
+      // Editar pago
+      function editar(id, monto, metodo, turno_id) {
+        mostrarFormulario();
+        document.getElementById('id').value = id;
+        document.getElementById('monto').value = monto;
+        document.getElementById('metodo').value = metodo;
+        document.getElementById('turno_id').value = turno_id;
+      }
 
-// Eliminar pago
-async function eliminar(id) {
-  if (confirm("¿Eliminar pago?")) {
-    await fetch(`${API}/${id}`, { method: "DELETE" });
-    cargarPagos();
-  }
-}
+      // Eliminar pago
+      async function eliminar(id) {
+        if (confirm('¿Eliminar pago?')) {
+          await fetch(`${API}/${id}`, { method: 'DELETE' });
+          cargarPagos();
+        }
+      }
 
-// Guardar pago
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const id = document.getElementById("id").value;
-  const datos = {
-    monto: parseFloat(document.getElementById("monto").value),
-    metodo: document.getElementById("metodo").value,
-    turno_id: Number(document.getElementById("turno_id").value)
-  };
+      function abrirModalPago() {
+        document.getElementById('modalPago').style.display = 'flex';
+      }
 
-  let res;
-  if (id) {
-    res = await fetch(`${API}/${id}`, {
-      method: "PUT",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(datos)
-    });
-  } else {
-    res = await fetch(API, {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify(datos)
-    });
-  }
+      function cerrarModalPago() {
+        document.getElementById('modalPago').style.display = 'none';
+        document.getElementById('formPago').reset();
+      }
 
-  if (!res.ok) {
-    alert("Error al guardar el pago.");
-    return;
-  }
+      // Cerrar con clic afuera
+      window.onclick = function (e) {
+        const modal = document.getElementById('modalPago');
+        if (e.target === modal) modal.style.display = 'none';
+      };
 
-  ocultarFormulario();
-  cargarPagos();
-});
+      // Guardar pago
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('id').value;
+        const datos = {
+          monto: parseFloat(document.getElementById('monto').value),
+          metodo: document.getElementById('metodo').value,
+          turno_id: Number(document.getElementById('turno_id').value),
+        };
 
-// Inicialización
-cargarTurnos();
-cargarPagos();
-</script>
+        let res;
+        if (id) {
+          res = await fetch(`${API}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos),
+          });
+        } else {
+          res = await fetch(API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos),
+          });
+        }
 
-</body>
+        if (!res.ok) {
+          alert('Error al guardar el pago.');
+          return;
+        }
+
+        ocultarFormulario();
+        cargarPagos();
+      });
+
+      // Inicialización
+      cargarTurnos();
+      cargarPagos();
+    </script>
+  </body>
 </html>

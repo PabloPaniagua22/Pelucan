@@ -1,140 +1,434 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Turnos - Pelucan</title>
-<style>
-  body { font-family: Arial; padding: 20px; }
-  input, button, select { margin: 5px; padding: 8px; }
-  table { border-collapse: collapse; margin-top: 20px; width: 100%; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-  #formTurno { display: none; margin-top: 20px; }
-  datalist option { padding: 5px; }
-</style>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Turnos - Pelucan</title>
+    <style>
+      /* ESTILO GENERAL */
+      body {
+        font-family: 'Inter', Arial, sans-serif;
+        background: #f5f7fb;
+        margin: 0;
+        padding: 30px;
+        color: #333;
+      }
 
-<!-- Barra de navegación -->
-<nav style="background-color: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px;">
-  <div style="font-weight: bold; font-size: 18px;">💈 Pelucan</div>
-  <div>
-    <a href="admin.html" style="color: white; text-decoration: none; margin-right: 15px;">Inicio</a>
-    <a href="turnos.html" style="color: white; text-decoration: none; margin-right: 15px;">Turnos</a>
-    <a href="usuarios.html" style="color: white; text-decoration: none; margin-right: 15px;">Usuarios</a>
-    <a href="servicios.html" style="color: white; text-decoration: none;">Servicios</a>
-  </div>
-</nav>
+      h2 {
+        text-align: center;
+        margin: 25px 0;
+        font-weight: 700;
+        color: #333;
+        letter-spacing: -0.5px;
+      }
 
-<body>
+      /* BOTONES */
+      button {
+        background: #4a7dfc;
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: 0.2s ease;
+        font-size: 15px;
+        margin: 5px;
+      }
 
-<h2>Gestión de Turnos</h2>
+      button:hover {
+        background: #2e63e6;
+      }
 
-<!-- Botones de acción -->
-<button onclick="mostrarFormulario()">Agregar Turno</button>
-<button onclick="window.history.back()">⬅️ Volver</button>
+      /* Botón volver */
+      button:last-of-type {
+        background: #777;
+      }
+      button:last-of-type:hover {
+        background: #555;
+      }
 
-<!-- Formulario oculto -->
-<form id="formTurno">
-  <input type="hidden" id="id">
-  
-  <label for="dia">Fecha:</label>
-  <input type="date" id="dia" required>
+      /* FORMULARIO */
+      #formTurno {
+        background: white;
+        padding: 20px;
+        margin-top: 20px;
+        max-width: 550px;
+        display: block;
+        border-radius: 12px;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
+      }
 
-  <label for="hora">Hora:</label>
-  <select id="hora" name="hora" required class="form-control">
-    <optgroup label="Turno Mañana">
-      <option value="08:00">08:00</option>
-      <option value="09:00">09:00</option>
-      <option value="10:00">10:00</option>
-      <option value="11:00">11:00</option>
-      <option value="12:00">12:00</option>
-    </optgroup>
-    <optgroup label="Turno Tarde">
-      <option value="17:00">17:00</option>
-      <option value="18:00">18:00</option>
-      <option value="19:00">19:00</option>
-      <option value="20:00">20:00</option>
-    </optgroup>
-  </select>
+      #formTurno input,
+      #formTurno select {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: 0.2s;
+      }
 
-  <select id="estado">
-    <option value="Pendiente">Pendiente</option>
-    <option value="Confirmado">Confirmado</option>
-    <option value="Cancelado">Cancelado</option>
-    <option value="Completado">Completado</option>
-  </select>
+      #formTurno input:focus,
+      #formTurno select:focus {
+        border-color: #4a7dfc;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(74, 125, 252, 0.25);
+      }
 
-  <label for="usuario_nombre">Cliente:</label> 
-  <input list="usuarios" id="usuario_nombre" placeholder="Buscar cliente..." required>
-  <datalist id="usuarios"></datalist>
+      /* TABLA */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 25px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      }
 
-  <label for="servicio_id">Servicio:</label>
-  <select id="servicio_id" required>
-    <option value="">Seleccione un servicio...</option>
-  </select>
+      thead {
+        background: #4a7dfc;
+        color: white;
+      }
 
-  <label for="medio_pago">Medio de Pago:</label>
-  <select id="medio_pago" required>
-    <option value="">Seleccione un medio de pago...</option>
-    <option value="Efectivo">Efectivo</option>
-    <option value="Tarjeta">Tarjeta</option>
-    <option value="Transferencia">Transferencia</option>
-  </select>
+      th,
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+      }
 
-  <button type="submit">Guardar</button>
-  <button type="button" onclick="ocultarFormulario()">Cancelar</button>
-</form>
+      tbody tr:nth-child(even) {
+        background: #f3f6ff;
+      }
 
-<!-- Tabla de turnos -->
-<table id="tablaTurnos">
-  <thead><tr><th>ID</th><th>Fecha</th><th>Hora</th><th>Usuario</th><th>Servicio</th><th>Estado</th><th>Acciones</th></tr></thead>
-  <tbody></tbody>
-</table>
+      tbody tr:hover {
+        background: #e3eaff;
+      }
 
-<script>
-const API_TURNOS = "http://localhost:3000/turnos";
-const API_USUARIOS = "http://localhost:3000/usuarios";
-const API_SERVICIOS = "http://localhost:3000/servicios";
+      /* ACCIONES */
+      .acciones button {
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin: 3px;
+      }
 
-const form = document.getElementById("formTurno");
-const tbody = document.querySelector("#tablaTurnos tbody");
-const usuariosDatalist = document.getElementById("usuarios");
-const servicioSelect = document.getElementById("servicio_id");
+      .acciones .editar {
+        background: #3da35a;
+      }
+      .acciones .editar:hover {
+        background: #2e7c47;
+      }
 
-let listaUsuarios = []; // Guardamos usuarios en memoria para buscar por nombre
+      .acciones .eliminar {
+        background: #d9534f;
+      }
+      .acciones .eliminar:hover {
+        background: #b43632;
+      }
 
-// Mostrar/Ocultar formulario
-function mostrarFormulario() { form.style.display = "block"; }
-function ocultarFormulario() { form.style.display = "none"; form.reset(); }
+      /* ETIQUETAS */
+      label {
+        font-weight: 600;
+        color: #444;
+        margin-top: 10px;
+        display: block;
+      }
+      .modal {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(3px);
+        z-index: 999;
+      }
 
-// Cargar usuarios y servicios al inicio
-async function cargarUsuariosYServicios() {
-  try {
-    const [usuariosRes, serviciosRes] = await Promise.all([
-      fetch(API_USUARIOS),
-      fetch(API_SERVICIOS)
-    ]);
-    const usuarios = await usuariosRes.json();
-    const servicios = await serviciosRes.json();
+      .modal-content {
+        background: #fff;
+        width: 450px;
+        margin: 6% auto;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 0.25s ease;
+      }
 
-    listaUsuarios = usuarios;
-    usuariosDatalist.innerHTML = usuarios.map(u => `<option value="${u.nombre}">`).join('');
-    servicioSelect.innerHTML = `<option value="">Seleccione un servicio...</option>` +
-      servicios.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
-  } catch (err) {
-    console.error("Error cargando usuarios o servicios:", err);
-    alert("Error cargando datos de usuarios o servicios");
-  }
-}
+      .close {
+        position: absolute;
+        font-size: 26px;
+        right: 20px;
+        top: 10px;
+        cursor: pointer;
+        color: #666;
+      }
 
-// Cargar turnos
-async function cargarTurnos() {
-  const res = await fetch(API_TURNOS);
-  const data = await res.json();
-  tbody.innerHTML = "";
-  data.forEach(t => {
-    const fechaObj = new Date(t.fecha);
-    const fechaFormateada = fechaObj.toLocaleDateString("es-AR");
-    tbody.innerHTML += `
+      .close:hover {
+        color: #000;
+      }
+
+      .modal-content h3 {
+        text-align: center;
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+
+      .btn-guardar {
+        background: #4a7dfc;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+      }
+
+      .btn-cancelar {
+        background: #777;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        margin-left: 5px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .modal {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(3px);
+        z-index: 999;
+      }
+
+      .modal-content {
+        background: #fff;
+        width: 450px;
+        margin: 6% auto;
+        padding: 25px;
+        border-radius: 14px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 0.25s ease;
+      }
+
+      .close {
+        position: absolute;
+        font-size: 26px;
+        right: 20px;
+        top: 10px;
+        cursor: pointer;
+        color: #666;
+      }
+
+      .close:hover {
+        color: #000;
+      }
+
+      .modal-content h3 {
+        text-align: center;
+        margin-bottom: 12px;
+        font-weight: 700;
+      }
+
+      .btn-guardar {
+        background: #4a7dfc;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+      }
+
+      .btn-cancelar {
+        background: #777;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        margin-left: 5px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Gestión de Turnos</h2>
+    <!-- BOTÓN PARA ABRIR EL MODAL -->
+    <button onclick="abrirModalTurno()">Agregar Turno</button>
+
+    <!-- MODAL DE TURNOS -->
+    <div id="modalTurno" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="cerrarModalTurno()">&times;</span>
+
+        <h3>Registrar Turno</h3>
+
+        <form id="formTurno">
+          <input type="hidden" id="id" />
+
+          <label for="dia">Fecha:</label>
+          <input type="date" id="dia" required />
+
+          <label for="hora">Hora:</label>
+          <select id="hora" required class="form-control">
+            <optgroup label="Turno Mañana">
+              <option value="08:00">08:00</option>
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="11:00">11:00</option>
+              <option value="12:00">12:00</option>
+            </optgroup>
+            <optgroup label="Turno Tarde">
+              <option value="17:00">17:00</option>
+              <option value="18:00">18:00</option>
+              <option value="19:00">19:00</option>
+              <option value="20:00">20:00</option>
+            </optgroup>
+          </select>
+
+          <label for="estado">Estado:</label>
+          <select id="estado">
+            <option value="Pendiente">Pendiente</option>
+            <option value="Confirmado">Confirmado</option>
+            <option value="Cancelado">Cancelado</option>
+            <option value="Completado">Completado</option>
+          </select>
+
+          <label for="usuario_nombre">Cliente:</label>
+          <input
+            list="usuarios"
+            id="usuario_nombre"
+            placeholder="Buscar cliente..."
+            required
+          />
+          <datalist id="usuarios"></datalist>
+
+          <label for="servicio_id">Servicio:</label>
+          <select id="servicio_id" required>
+            <option value="">Seleccione un servicio...</option>
+          </select>
+
+          <label for="medio_pago">Medio de Pago:</label>
+          <select id="medio_pago" required>
+            <option value="">Seleccione un medio de pago...</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+
+          <button type="submit" class="btn-guardar">Guardar</button>
+          <button
+            type="button"
+            class="btn-cancelar"
+            onclick="cerrarModalTurno()"
+          >
+            Cancelar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabla de turnos -->
+    <table id="tablaTurnos">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Usuario</th>
+          <th>Servicio</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      const API_TURNOS = 'http://localhost:3000/turnos';
+      const API_USUARIOS = 'http://localhost:3000/usuarios';
+      const API_SERVICIOS = 'http://localhost:3000/servicios';
+
+      const form = document.getElementById('formTurno');
+      const tbody = document.querySelector('#tablaTurnos tbody');
+      const usuariosDatalist = document.getElementById('usuarios');
+      const servicioSelect = document.getElementById('servicio_id');
+
+      let listaUsuarios = []; // Guardamos usuarios en memoria para buscar por nombre
+
+      // Mostrar/Ocultar formulario
+      function mostrarFormulario() {
+        form.style.display = 'block';
+      }
+      function ocultarFormulario() {
+        form.style.display = 'none';
+        form.reset();
+      }
+
+      // Cargar usuarios y servicios al inicio
+      async function cargarUsuariosYServicios() {
+        try {
+          const [usuariosRes, serviciosRes] = await Promise.all([
+            fetch(API_USUARIOS),
+            fetch(API_SERVICIOS),
+          ]);
+          const usuarios = await usuariosRes.json();
+          const servicios = await serviciosRes.json();
+
+          listaUsuarios = usuarios;
+          usuariosDatalist.innerHTML = usuarios
+            .map((u) => `<option value="${u.nombre}">`)
+            .join('');
+          servicioSelect.innerHTML =
+            `<option value="">Seleccione un servicio...</option>` +
+            servicios
+              .map((s) => `<option value="${s.id}">${s.nombre}</option>`)
+              .join('');
+        } catch (err) {
+          console.error('Error cargando usuarios o servicios:', err);
+          alert('Error cargando datos de usuarios o servicios');
+        }
+      }
+      function abrirModalTurno() {
+      document.getElementById("modalTurno").style.display = "block";
+    }
+
+    function cerrarModalTurno() {
+      document.getElementById("modalTurno").style.display = "none";
+      document.getElementById("formTurno").reset();
+    }
+
+    // Cerrar al tocar fuera
+    window.onclick = function(e) {
+      const modal = document.getElementById("modalTurno");
+      if (e.target === modal) cerrarModalTurno();
+    };
+
+      // Cargar turnos
+      async function cargarTurnos() {
+        const res = await fetch(API_TURNOS);
+        const data = await res.json();
+        tbody.innerHTML = '';
+        data.forEach((t) => {
+          const fechaObj = new Date(t.fecha);
+          const fechaFormateada = fechaObj.toLocaleDateString('es-AR');
+          tbody.innerHTML += `
       <tr>
         <td>${t.id}</td>
         <td>${fechaFormateada}</td>
@@ -147,104 +441,109 @@ async function cargarTurnos() {
           <button onclick="eliminar(${t.id})">🗑️</button>
         </td>
       </tr>`;
-  });
-}
+        });
+      }
 
-// Editar turno
-function editar(id, fecha, hora, estado, usuario_id, servicio_id) {
-  mostrarFormulario();
-  const fechaObj = new Date(fecha);
-  const dia = String(fechaObj.getDate()).padStart(2, "0");
-  const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
-  const anio = fechaObj.getFullYear();
-  document.getElementById("id").value = id;
-  document.getElementById("dia").value = `${dia}/${mes}/${anio}`;
-  document.getElementById("hora").value = hora;
-  document.getElementById("estado").value = estado;
-  document.getElementById("servicio_id").value = servicio_id;
-  
-  const usuario = listaUsuarios.find(u => u.id === usuario_id);
-  if (usuario) document.getElementById("usuario_nombre").value = usuario.nombre;
-}
+      // Editar turno
+      function editar(id, fecha, hora, estado, usuario_id, servicio_id) {
+        mostrarFormulario();
+        const fechaObj = new Date(fecha);
+        const dia = String(fechaObj.getDate()).padStart(2, '0');
+        const mes = String(fechaObj.getMonth() + 1).padStart(2, '0');
+        const anio = fechaObj.getFullYear();
+        document.getElementById('id').value = id;
+        document.getElementById('dia').value = `${dia}/${mes}/${anio}`;
+        document.getElementById('hora').value = hora;
+        document.getElementById('estado').value = estado;
+        document.getElementById('servicio_id').value = servicio_id;
 
-// Eliminar turno
-async function eliminar(id) {
-  if (confirm("¿Eliminar turno?")) {
-    await fetch(`${API_TURNOS}/${id}`, { method: "DELETE" });
-    cargarTurnos();
-  }
-}
+        const usuario = listaUsuarios.find((u) => u.id === usuario_id);
+        if (usuario)
+          document.getElementById('usuario_nombre').value = usuario.nombre;
+      }
 
-// Guardar turno
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const id = document.getElementById("id").value;
+      // Eliminar turno
+      async function eliminar(id) {
+        if (confirm('¿Eliminar turno?')) {
+          await fetch(`${API_TURNOS}/${id}`, { method: 'DELETE' });
+          cargarTurnos();
+        }
+      }
 
-  // Obtener fecha y hora
-  const fechaSeleccionada = document.getElementById("dia").value; // yyyy-mm-dd
-  const horaValor = document.getElementById("hora").value; // hh:mm
-  if (!fechaSeleccionada || !horaValor) {
-    alert("Debe ingresar una fecha y hora válidas.");
-    return;
-  }
+      // Guardar turno
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('id').value;
 
-  // Combinar fecha y hora y convertir a ISO
-  const fechaISO = new Date(`${fechaSeleccionada}T${horaValor}:00`).toISOString();
+        // Obtener fecha y hora
+        const fechaSeleccionada = document.getElementById('dia').value; // yyyy-mm-dd
+        const horaValor = document.getElementById('hora').value; // hh:mm
+        if (!fechaSeleccionada || !horaValor) {
+          alert('Debe ingresar una fecha y hora válidas.');
+          return;
+        }
 
-  // Buscar usuario seleccionado
-  const nombreUsuario = document.getElementById("usuario_nombre").value.trim();
-  const usuario = listaUsuarios.find(
-    u => u.nombre.toLowerCase() === nombreUsuario.toLowerCase()
-  );
-  if (!usuario) {
-    alert("Debe seleccionar un cliente válido de la lista");
-    return;
-  }
+        // Combinar fecha y hora y convertir a ISO
+        const fechaISO = new Date(
+          `${fechaSeleccionada}T${horaValor}:00`,
+        ).toISOString();
 
-  // Construir objeto a enviar
-  const datos = {
-    fecha: fechaISO,
-    hora: horaValor,
-    estado: document.getElementById("estado").value,
-    usuario_id: usuario.id,
-    servicio_id: Number(document.getElementById("servicio_id").value),
-    medio_pago: document.getElementById("medio_pago").value
-  };
+        // Buscar usuario seleccionado
+        const nombreUsuario = document
+          .getElementById('usuario_nombre')
+          .value.trim();
+        const usuario = listaUsuarios.find(
+          (u) => u.nombre.toLowerCase() === nombreUsuario.toLowerCase(),
+        );
+        if (!usuario) {
+          alert('Debe seleccionar un cliente válido de la lista');
+          return;
+        }
 
-  try {
-    let res;
-    if (id) {
-      // Actualizar turno existente
-      res = await fetch(`${API_TURNOS}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
+        // Construir objeto a enviar
+        const datos = {
+          fecha: fechaISO,
+          hora: horaValor,
+          estado: document.getElementById('estado').value,
+          usuario_id: usuario.id,
+          servicio_id: Number(document.getElementById('servicio_id').value),
+          medio_pago: document.getElementById('medio_pago').value,
+        };
+
+        try {
+          let res;
+          if (id) {
+            // Actualizar turno existente
+            res = await fetch(`${API_TURNOS}/${id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(datos),
+            });
+          } else {
+            // Crear nuevo turno
+            res = await fetch(API_TURNOS, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(datos),
+            });
+          }
+
+          if (res.ok) {
+            ocultarFormulario();
+            cargarTurnos();
+          } else {
+            const error = await res.json();
+            alert(error.message || 'Error al guardar el turno');
+          }
+        } catch (err) {
+          console.error(err);
+          alert('Error de conexión con el servidor.');
+        }
       });
-    } else {
-      // Crear nuevo turno
-      res = await fetch(API_TURNOS, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
-      });
-    }
 
-    if (res.ok) {
-      ocultarFormulario();
+      // Inicial
+      cargarUsuariosYServicios();
       cargarTurnos();
-    } else {
-      const error = await res.json();
-      alert(error.message || "Error al guardar el turno");
-    }
-  } catch (err) {
-    console.error(err);
-    alert("Error de conexión con el servidor.");
-  }
-});
-
-// Inicial
-cargarUsuariosYServicios();
-cargarTurnos();
-</script>
-</body>
+    </script>
+  </body>
 </html>
